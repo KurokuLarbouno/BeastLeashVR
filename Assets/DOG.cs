@@ -21,7 +21,7 @@ public class DOG : MonoBehaviour
         float temp, length;
         temp = Mathf.Pow(transform.position.x - post_pose.x, 2) + Mathf.Pow(transform.position.z - post_pose.z, 2);
         length = Mathf.Sqrt(temp);
-        if(length >= 0.1 && !anim.isPlaying) {
+        if(length >= 0.01 && !anim.isPlaying) {
             anim.Play("Default Take");
         }else if(length < 0.1)
         {
