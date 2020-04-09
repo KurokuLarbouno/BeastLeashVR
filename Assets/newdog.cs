@@ -6,7 +6,7 @@ using System;
 
 public class newdog : MonoBehaviour
 {
-    private SerialPort sp = new SerialPort("COM7", 115200);
+    private SerialPort sp = new SerialPort("COM12", 115200);
     private GameObject Target;
     private GameObject Tracker;
     private Vector3 finalFace, carFace;//最終朝向方向, 車體方向
@@ -49,7 +49,7 @@ public class newdog : MonoBehaviour
         tarPos = Target.transform.position;
         Vector3 goVec = tarPos - carPos;
         //Debug.Log(goVec.magnitude);
-        if (goVec.magnitude > 0.1)
+        if (goVec.magnitude > 0.2)
         {
             goVec.Normalize();
             float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
@@ -70,7 +70,7 @@ public class newdog : MonoBehaviour
         }
         else
         {
-            sendMassage = 0;
+            sendMassage = 100000;
         }
         try
         {
