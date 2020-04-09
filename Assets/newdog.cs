@@ -11,8 +11,8 @@ public class newdog : MonoBehaviour
     private GameObject Tracker;
     private Vector3 finalFace, carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos;
-    private int carSp = 0;
-    private bool isTimerSet = false;
+    private int carSp = 1;
+    private bool isTimerSet = false, isReached = false;
     private int sendMassage = 0;
 
     // Start is called before the first frame update
@@ -36,34 +36,42 @@ public class newdog : MonoBehaviour
             this.InvokeRepeating("setMassage", 1.0f, 0.15f);//"methodName" in "time" seconds, then repeatedly every "repeatRate" seconds.
             isTimerSet = true;
         }
-            //車子定位
-            Vector3 trackPos = Tracker.transform.position;
+        //車子定位
+        Vector3 trackPos = Tracker.transform.position;
         carPos = new Vector3(trackPos.x, 0, trackPos.z);
         transform.position = carPos;
-
+        
         //車子面向
         trackPos = Tracker.transform.forward;
         carFace = new Vector3(trackPos.x, 0, trackPos.z);
         carFace.Normalize();
         //決定方向
         tarPos = Target.transform.position;
-        //Vector3.Distance( A, B );
         Vector3 goVec = tarPos - carPos;
-        goVec.Normalize();
-        float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
-        //Debug.Log((int)angle + " degrees.");
-        sendMassage = 0 + carSp;
-        if (angle >= 0)
+        //Debug.Log(goVec.magnitude);
+        if (goVec.magnitude > 0.1)
         {
-            if (angle > 75) angle = 75;//75011
-            sendMassage = ((int) angle) * 1000 + 100;
+            goVec.Normalize();
+            float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
+            //Debug.Log((int)angle + " degrees.");
+            sendMassage = 10 + carSp;
+
+            if (angle >= 0)
+            {
+                if (angle > 75) angle = 75;//75011
+                sendMassage += ((int)angle) * 1000 + 100;
+            }
+            else
+            {
+                if (angle < -75) angle = -75;//75111
+                sendMassage += -1 * ((int)angle) * 1000;
+            }
+            sendMassage += 100000;
         }
         else
         {
-            if (angle < -75) angle = -75;//75111
-            sendMassage = -1 * ((int)angle) * 1000;
+            sendMassage = 0;
         }
-        sendMassage += 100000;
         try
         {
             String value = sp.ReadLine();
@@ -98,4 +106,12 @@ public class newdog : MonoBehaviour
             Debug.Log(" Serial Error.");
         }
     }
+    //private void OnTriggerEnter(Collider collider)
+    //{
+    //    if (collider.transform.parent.tag == "Target") 
+    //    {
+    //        isReached = true;
+    //        Debug.Log("Bang!");
+    //    }
+    //}
 }
