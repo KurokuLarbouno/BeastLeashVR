@@ -825,7 +825,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 761e7804ed8e6a0458e0d3b930cc450c, type: 3}
       propertyPath: m_TagString
-      value: Target
+      value: Tracker
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 761e7804ed8e6a0458e0d3b930cc450c, type: 3}
       propertyPath: m_LocalPosition.x

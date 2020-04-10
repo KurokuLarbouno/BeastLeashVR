@@ -6,12 +6,12 @@ using System;
 
 public class newdog : MonoBehaviour
 {
-    private SerialPort sp = new SerialPort("COM12", 115200);
+    private SerialPort sp = new SerialPort("COM7", 115200);
     private GameObject Target;
     private GameObject Tracker;
     private Vector3 finalFace, carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos;
-    private int carSp = 1;
+    private int carSp = 2;
     private bool isTimerSet = false, isReached = false;
     private int sendMassage = 0;
 
