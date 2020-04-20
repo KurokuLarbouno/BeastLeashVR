@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Tracker
   - Target
+  - DogHeadNd
+  - DogChestNd
   layers:
   - Default
   - TransparentFX
