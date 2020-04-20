@@ -11,7 +11,7 @@ public class newdog : MonoBehaviour
     private GameObject Tracker;
     private Vector3 finalFace, carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos;
-    private int carSp = 0;
+    private int carSp = 2;
     private bool isTimerSet = false, isReached = false;
     private int sendMassage = 0;
 
@@ -42,7 +42,7 @@ public class newdog : MonoBehaviour
         trackRot *= Quaternion.Euler(90, 0, 0);
         carPos = new Vector3(trackPos.x, 0, trackPos.z);
         transform.position = carPos;
-        transform.rotation = trackRot;
+        transform.rotation = new Quaternion(0, trackRot.y, 0, trackRot.w);
 
         //車子面向
         trackPos = transform.forward;

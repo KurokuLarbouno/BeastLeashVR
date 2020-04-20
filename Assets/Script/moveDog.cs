@@ -36,7 +36,7 @@ public class moveDog : MonoBehaviour
         dogFace = new Vector3(transform.forward.x, 0, transform.forward.z);
         float tarLength = goVec.magnitude;
         playerSp = tarLength / Time.deltaTime;
-        Debug.Log(playerSp);
+        //Debug.Log(playerSp);
         goVec.Normalize(); dogFace.Normalize();
         //更新動畫
         if (goVec.magnitude > 0)
@@ -47,7 +47,7 @@ public class moveDog : MonoBehaviour
         dogPos = curVec;
 
 
-        if (playerSp <= 0.001)
+        if (playerSp <= 0.1)
         {
             if (!isWait)
             {
