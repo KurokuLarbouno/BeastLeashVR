@@ -25,7 +25,7 @@ public class controller : MonoBehaviour
 
     void Start()
     {
-        Target = GameObject.FindWithTag("Target");
+        Target = GameObject.Find("Target");
     }
       
         private void Update()
@@ -33,7 +33,10 @@ public class controller : MonoBehaviour
         if (m_GrabAction.GetStateDown(m_Pose.inputSource)) 
         {
             TrigerUp();
-
+        };
+        if (m_GrabAction.GetStateUp(m_Pose.inputSource))
+        {
+            TrigerDown();
         };
     }
     private void TrigerUp()
@@ -41,6 +44,12 @@ public class controller : MonoBehaviour
         if (Target != null) 
         {
             if (Target.transform.gameObject.tag == "Untagged") Target.transform.gameObject.tag = "Target";
+        }
+    }
+    private void TrigerDown()
+    {
+        if (Target != null)
+        {
             if (Target.transform.gameObject.tag == "Target") Target.transform.gameObject.tag = "Untagged";
         }
     }
