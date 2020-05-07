@@ -8,6 +8,8 @@ TagManager:
   - Target
   - DogHeadNd
   - DogChestNd
+  - Rope
+  - RopeEnd
   layers:
   - Default
   - TransparentFX

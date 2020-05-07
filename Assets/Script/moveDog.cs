@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class moveDog : MonoBehaviour
 {
+
+    int dogState = 1;//1:walk, 2:rush, 3:stay
+
     private Animator AnimDogAC;
     private GameObject Dogfab, Target, DogChestNd, DogHeadNd, MainCam;
     private bool sit = false, run = false, walk = false, idle = false, isWait = true;

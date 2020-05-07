@@ -23,8 +23,8 @@ public class line : MonoBehaviour
         //lineRenderer.SetColors(Color.red, Color.yellow);
         ////设置宽度
         //lineRenderer.SetWidth(0.02f, 0.02f);
-        dog = GameObject.Find("DOG");
-        rope = GameObject.Find("rope");
+        dog = GameObject.FindWithTag("RopeEnd");
+        rope = GameObject.FindWithTag("Rope");
         Debug.Log(dog);
         lineRenderer = GetComponent<LineRenderer>();
         Debug.Log(lineRenderer);
@@ -34,7 +34,7 @@ public class line : MonoBehaviour
     void Update()
     {
         //pos = dog.transform.position;
-        pos = dog.transform.GetChild(1).transform.position;
+        pos = dog.transform.position;
         lineRenderer.SetPosition(0, pos);
         //Debug.Log(pos);
         pos = rope.transform.position;

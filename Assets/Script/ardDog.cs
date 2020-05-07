@@ -4,33 +4,27 @@ using UnityEngine;
 using System.IO.Ports;
 using System;
 
-public class newdog : MonoBehaviour
+public class FinalDog : MonoBehaviour
 {
     [SerializeField]
     [Range(1, 3)]
     public int dogState = 1;//1:walk, 2:rush, 3:stay
     //Serial
     private SerialPort sp = new SerialPort("COM6", 115200);
-    //空間
-    private GameObject Target, Tracker;
+    private GameObject Target;
+    private GameObject Tracker;
     private Vector3 finalFace, carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos;
     private int carSp = 2;
     private bool isTimerSet = false, isReached = false;
-    //訊息
     private int sendMassage = 0;
-    //walk mode
-    private int walkMode = 1;//1: 朝target位置, 2:隨機, 3:不須改向
-    //run mode
-
-    //stay mode
 
     // Start is called before the first frame update
     void Start()
     {
         Target = GameObject.FindWithTag("Target");
         Tracker = GameObject.FindWithTag("Tracker");
-        
+
         //Serial
         sp.Open();
         sp.ReadTimeout = 10;
@@ -40,20 +34,6 @@ public class newdog : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (dogState == 1)//1:walk
-        {
-            //
-        }
-        else if (dogState == 2)//2:rush
-        {
-
-        }
-        else if (dogState == 3)//3:stay
-        {
-
-        }
-
         if (sp.IsOpen && !isTimerSet)
         {
             //定時傳送
@@ -127,12 +107,19 @@ public class newdog : MonoBehaviour
             {
                 Debug.Log("ReadLine Timeout!");
             }
-            
+
         }
         else
         {
             Debug.Log(" Serial Error.");
         }
     }
-
+    //private void OnTriggerEnter(Collider collider)
+    //{
+    //    if (collider.transform.parent.tag == "Target") 
+    //    {
+    //        isReached = true;
+    //        Debug.Log("Bang!");
+    //    }
+    //}
 }
