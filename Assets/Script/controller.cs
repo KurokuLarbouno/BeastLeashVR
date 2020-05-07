@@ -1,26 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net.Configuration;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class controller : MonoBehaviour
 {
-    public SteamVR_Action_Single m_GrabAction = null;
+    public SteamVR_Action_Boolean m_GrabAction = null;
+    
     private SteamVR_Behaviour_Pose m_Pose = null;
+    private FixedJoint m_Joint = null;
+
+    private Interactable m_CrrentInteractable = null;
+    public  List<Interactable> m_CrrentInteractables = new List<Interactable>();
+
+    private GameObject Target;
+
+    private void Awake()
+    {
+        m_Pose = GetComponent<SteamVR_Behaviour_Pose>();
+        m_Joint = GetComponent<FixedJoint>();
+    }
 
     void Start()
     {
-        m_Pose = GetComponentInParent<SteamVR_Behaviour_Pose>();
-        m_GrabAction[m_Pose.inputSource].onChange -= Grab;
+        Target = GameObject.FindWithTag("Target");
     }
-
-    // Update is called once per frame
-    void Update()
+      
+        private void Update()
     {
-        //if(m_GrabAction.GetStateDown(m_Pose.inputSource))
+        if (m_GrabAction.GetStateDown(m_Pose.inputSource)) 
+        {
+            TrigerUp();
+
+        };
     }
-    private void Grab(SteamVR_Action_Single action, SteamVR_Input_Sources source, float axis, float delta)
+    private void TrigerUp()
     {
-
+        if (Target != null) 
+        {
+            if (Target.transform.gameObject.tag == "Untagged") Target.transform.gameObject.tag = "Target";
+            if (Target.transform.gameObject.tag == "Target") Target.transform.gameObject.tag = "Untagged";
+        }
     }
 }
