@@ -32,7 +32,7 @@ public class FormalDog : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Target = GameObject.FindWithTag("Target");
+        Target = GameObject.Find("Target");
         Tracker = GameObject.FindWithTag("Tracker");
         Rope = GameObject.FindWithTag("Rope");
         //Serial
@@ -63,8 +63,15 @@ public class FormalDog : MonoBehaviour
         carFace = new Vector3(trackPos.x, 0, trackPos.z);
         carFace.Normalize();
         //目標方向
-        tarPos = Target.transform.position;
-        tarPos = new Vector3(tarPos.x, 0, tarPos.z);
+        if (Target.transform.gameObject.tag == "Target")
+        {
+            tarPos = Target.transform.position;
+            tarPos = new Vector3(tarPos.x, 0, tarPos.z);
+        }
+        else
+        {
+            tarPos = carPos;
+        }
         Vector3 goVec = tarPos - carPos;
         //Debug.Log(goVec.magnitude);
         //繩子方向
@@ -136,12 +143,6 @@ public class FormalDog : MonoBehaviour
 
             }
 
-            /*--------------
-            goVec.Normalize();
-            float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
-            //Debug.Log((int)angle + " degrees.");
-            sendMassage = 10 + carSp;
-            angle *= 1.7f;
             if (angle >= 0)
             {
                 if (angle > 75) angle = 75;//75011
@@ -152,7 +153,7 @@ public class FormalDog : MonoBehaviour
                 if (angle < -75) angle = -75;//75111
                 sendMassage += -1 * ((int)angle) * 1000;
             }
-            sendMassage += 100000;*/
+            sendMassage += 100000;
         }
         else
         {
