@@ -59,11 +59,15 @@ public class moveDog : MonoBehaviour
                 //Idle();
             }
         }
-        else if (!walk) 
+        else if (playerSp <= 0.2 && !walk) 
         { 
             Walk(); /*Debug.Log("WALK");*/ isWait = false;
         }
- 
+        else if (playerSp > 0.2 && !run)
+        {
+            Run(); /*Debug.Log("WALK");*/ isWait = false;
+        }
+
     }
     private void LateUpdate()
     {

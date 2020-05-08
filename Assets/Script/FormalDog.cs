@@ -15,7 +15,7 @@ public class FormalDog : MonoBehaviour
     private GameObject Target, Tracker, Rope;
     private Vector3 carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos, ropePos;
-    private int carSp = 2;
+    private int carSp = 3;
     private bool isTimerSet = false;
     //繩子
     private float leashLength = 1;
@@ -24,9 +24,9 @@ public class FormalDog : MonoBehaviour
     private int sendMassage = 0;
     //walk mode
     private int walkMode = 2;//1: 朝target位置, 2:隨機, 3:不須改向, 4:等玩家給繩, 5:拉扯
-    private int walkAngle = 0, walkMdTm = 1, walkSp = 0, waitTm = 1;
+    private int walkAngle = 0, walkMdTm = 1, walkSp = 0, waitTm = 3;
     //run mode
-    private int runSp = 7;
+    private int runSp = 5;
     //stay mode
 
     // Start is called before the first frame update
@@ -63,29 +63,24 @@ public class FormalDog : MonoBehaviour
         carFace = new Vector3(trackPos.x, 0, trackPos.z);
         carFace.Normalize();
         //目標方向
-        if (Target.transform.gameObject.tag == "Target")
-        {
-            tarPos = Target.transform.position;
-            tarPos = new Vector3(tarPos.x, 0, tarPos.z);
-        }
-        else
-        {
-            tarPos = carPos;
-        }
+        tarPos = Target.transform.position;
+        tarPos = new Vector3(tarPos.x, 0, tarPos.z);
         Vector3 goVec = tarPos - carPos;
         //Debug.Log(goVec.magnitude);
         //繩子方向
         ropePos = Rope.transform.position;
         ropePos = new Vector3(ropePos.x, 0, ropePos.z);
         Vector3 ropeVec = carPos - ropePos;
+        //Debug.Log("Rope" + ropeVec.magnitude);
         if (initRope)
         {
-            leashLength = ropeVec.magnitude;
+            //leashLength = ropeVec.magnitude;
+            leashLength = 1.0f;
             initRope = true;
             Debug.Log("Leash length: " + leashLength);
         }
 
-        if (goVec.magnitude > 0.3)
+        if (goVec.magnitude > 0.3 && Target.transform.gameObject.tag == "Target")
         {
             goVec.Normalize();
             float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
@@ -95,7 +90,7 @@ public class FormalDog : MonoBehaviour
             {
                 //繩夠長:1之內隨機走
                 //繩不夠:一秒拉一下
-                if (goVec.magnitude > (leashLength - 0.3))
+                if (ropeVec.magnitude > (leashLength - 0.3))
                 {
                     if (walkMode == 4)
                     {
@@ -103,24 +98,27 @@ public class FormalDog : MonoBehaviour
                     }
                     else if (walkMode == 5)
                     {
-                        //outSp = carSp;保持原狀
+                        //outSp = carSp;//保持原狀
+                        walkSp = UnityEngine.Random.Range(0, 1);
+                        outSp += walkSp;
                     }
-                    else 
+                    else
                     {
-                        this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1));
+                        this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1)-2);
                         walkMode = 4;
                     }
                 }
-                else if (goVec.magnitude >= 1 && goVec.magnitude < leashLength)
+                else if (goVec.magnitude >= 0.6 /*&& goVec.magnitude < leashLength*/)
                 {
                     if (walkMode == 2)//變換方向後保持一陣子
                     {
                         walkMode = 3;
-                        walkAngle = (UnityEngine.Random.Range(0, 8) - 4) * 5;
+                        walkAngle = (UnityEngine.Random.Range(0, 1) - 1) * 30;
                         walkSp = UnityEngine.Random.Range(0, 2);
                         outSp += walkSp;
                         angle += walkAngle;
                         this.Invoke("changeDir", walkMdTm + UnityEngine.Random.Range(0, 1));
+                        //Debug.Log("change dir");
                     }
                     else if (walkMode == 3)//保持方向速度
                     {
@@ -128,29 +126,32 @@ public class FormalDog : MonoBehaviour
                         outSp += walkSp;
                     }
                 }
-                else if (goVec.magnitude <1)//正規走
+                else if (goVec.magnitude <0.7)//正規走
                 {
                     walkMode = 1;
-                    CancelInvoke();
+                    //CancelInvoke();
                 }
             }
             else if (dogState == 2)//2:rush
             {
+                //如果狗後退，先切walk
                 carSp = runSp;
+                //Debug.Log("RUN!");
             }
             else if (dogState == 3)//3:stay
             {
 
             }
 
+            sendMassage = 10 + outSp;
             if (angle >= 0)
             {
-                if (angle > 75) angle = 75;//75011
+                if (angle > 85) angle = 85;//75011
                 sendMassage += ((int)angle) * 1000 + 100;
             }
             else
             {
-                if (angle < -75) angle = -75;//75111
+                if (angle < -85) angle = -85;//75111
                 sendMassage += -1 * ((int)angle) * 1000;
             }
             sendMassage += 100000;
@@ -159,18 +160,18 @@ public class FormalDog : MonoBehaviour
         {
             sendMassage = 100000;
         }
-        try
-        {
-            String value = sp.ReadLine();
-            if (value != "")
-            {
-                //Debug.Log("> " + value);
-            }
-        }
-        catch
-        {
-            Debug.Log("ReadLine Timeout!");
-        }
+        //try
+        //{
+        //    String value = sp.ReadLine();
+        //    if (value != "")
+        //    {
+        //        Debug.Log("> " + value);
+        //    }
+        //}
+        //catch
+        //{
+        //    Debug.Log("ReadLine Timeout!");
+        //}
     }
 
     private void setMassage()
@@ -180,11 +181,12 @@ public class FormalDog : MonoBehaviour
             try
             {
                 //Debug.Log(sendMassage.ToString());
-                sp.Write(sendMassage.ToString());
+                if(sendMassage >= 100000 && sendMassage < 200000) sp.Write(sendMassage.ToString());
+                else Debug.Log("massage wrong!" + sendMassage.ToString());
             }
             catch
             {
-                Debug.Log("ReadLine Timeout!");
+                Debug.Log("WriteLine Timeout!");
             }
 
         }
@@ -201,8 +203,17 @@ public class FormalDog : MonoBehaviour
     }
     private void waitPull()//走路等待主人
     {
-        this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1));
-        if (walkMode == 4) walkMode = 5;
-        if (walkMode == 5) walkMode = 4;
+        Debug.Log("wait for u!!!" + walkMode);
+        
+        if (walkMode == 4)
+        {
+            walkMode = 5;
+            this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(2, 3));
+        }
+        else if (walkMode == 5)
+        {
+            walkMode = 4;
+            this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1) - 2);
+        }
     }
 }

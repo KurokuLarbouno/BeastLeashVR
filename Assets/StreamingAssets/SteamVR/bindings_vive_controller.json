@@ -307,7 +307,7 @@
    "category" : "steamvr_input",
    "controller_type" : "vive_controller",
    "description" : "",
-   "name" : "我為 Vive Controller 設定的 BeastLeash [Testing] 配置",
+   "name" : "為 Vive Controller 儲存的 BeastLeash [Testing] 配置",
    "options" : {},
    "simulated_actions" : []
 }
