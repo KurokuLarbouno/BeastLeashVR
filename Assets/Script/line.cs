@@ -25,9 +25,9 @@ public class line : MonoBehaviour
         //lineRenderer.SetWidth(0.02f, 0.02f);
         dog = GameObject.FindWithTag("RopeEnd");
         rope = GameObject.FindWithTag("Rope");
-        Debug.Log(dog);
+        //Debug.Log(dog);
         lineRenderer = GetComponent<LineRenderer>();
-        Debug.Log(lineRenderer);
+        //Debug.Log(lineRenderer);
 
     }
 

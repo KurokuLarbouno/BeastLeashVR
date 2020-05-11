@@ -43,14 +43,16 @@ public class controller : MonoBehaviour
     {
         if (Target != null) 
         {
-            if (Target.transform.gameObject.tag == "Untagged") Target.transform.gameObject.tag = "Flag";
+           // if (Target.transform.gameObject.tag == "Untagged") Target.transform.gameObject.tag = "Flag";
+            if (Target.transform.gameObject.tag == "Untagged") Target.transform.gameObject.tag = "Target";
         }
     }
     private void TrigerDown()
     {
         if (Target != null)
         {
-            if (Target.transform.gameObject.tag == "Flag") Target.transform.gameObject.tag = "Untagged";
+            // if (Target.transform.gameObject.tag == "Flag") Target.transform.gameObject.tag = "Untagged";
+             if (Target.transform.gameObject.tag == "Target") Target.transform.gameObject.tag = "Untagged";
         }
     }
 }

@@ -12,6 +12,9 @@ TagManager:
   - RopeEnd
   - Dog
   - Flag
+  - projectile
+  - FxTemporaire
+  - wall
   layers:
   - Default
   - TransparentFX

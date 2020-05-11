@@ -15,13 +15,13 @@ public class FormalDog : MonoBehaviour
     private GameObject Target, Tracker, Rope;
     private Vector3 carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos, ropePos;
-    private int carSp = 3;
+    private int carSp = 1;
     private bool isTimerSet = false;
     //繩子
     private float leashLength = 1;
     private bool initRope = false;
     //碰牆事件
-    private float wallOffset = 2;    //宣告距離
+    private float wallOffset = 0.5f;    //宣告距離
     RaycastHit hit;//射線方向
     //訊息
     private int sendMassage = 0;
@@ -36,6 +36,7 @@ public class FormalDog : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Target = GameObject.Find("RoadFinder");
         Target = GameObject.Find("Target");
         Tracker = GameObject.FindWithTag("Tracker");
         Rope = GameObject.FindWithTag("Rope");
@@ -84,27 +85,27 @@ public class FormalDog : MonoBehaviour
             Debug.Log("Leash length: " + leashLength);
         }
 
-        Ray forRay = new Ray(transform.position, transform.forward); //射線
-        if (Physics.Raycast(forRay, out hit, wallOffset))
-        {
-            //射線碰到TAG為EVN 觸發
-            if (hit.collider.tag == "wall")
-            {
-                Vector3 wallVec;
-                wallVec = Vector3.Reflect(transform.forward, hit.normal);// Vector3 Reflect(Vector3 inDirection, Vector3 inNormal);
-                wallVec = Vector3.ProjectOnPlane(wallVec, hit.normal);//Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
-                if (wallVec.magnitude == 0) { wallVec = Vector3.ProjectOnPlane(transform.right, hit.normal); }
-                wallVec.Normalize();
-                float rayDis = Vector3.Distance(hit.point, transform.position);
-                goVec = Vector3.Lerp(wallVec, transform.forward, rayDis / wallOffset + 0.1f);
-            }
-        }
-        //Debug.DrawLine(transform.position, goVec * 3 + transform.position);
 
-        if (goVec.magnitude > 0.3 && Target.transform.gameObject.tag == "Target")
+        if (goVec.magnitude > 0.5 && Target.transform.gameObject.tag == "Target")
         {
             goVec.Normalize();
-
+            //牆壁檢查
+            Ray forRay = new Ray(transform.position, transform.forward); //射線
+            if (Physics.Raycast(forRay, out hit, wallOffset))
+            {
+                //射線碰到TAG為EVN 觸發
+                if (hit.collider.tag == "wall")
+                {
+                    Vector3 wallVec;
+                    wallVec = Vector3.Reflect(transform.forward, hit.normal);// Vector3 Reflect(Vector3 inDirection, Vector3 inNormal);
+                    wallVec = Vector3.ProjectOnPlane(wallVec, hit.normal);//Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
+                    if (wallVec.magnitude == 0) { wallVec = Vector3.ProjectOnPlane(transform.right, hit.normal); }
+                    wallVec.Normalize();
+                    float rayDis = Vector3.Distance(hit.point, transform.position);
+                    goVec = Vector3.Lerp(wallVec, goVec, rayDis / wallOffset + 0.1f);
+                }
+            }
+            //Debug.DrawLine(transform.position, goVec * 3 + transform.position);
             //拉扯檢查
             Vector3 physicVec;
             physicVec = transform.position - carPos;
@@ -113,7 +114,7 @@ public class FormalDog : MonoBehaviour
             { 
                 isFallback = true;
                 Debug.Log("formal fallback");
-            }
+            }else isFallback = false;
             //預設方向及速度
             float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
             int outSp = carSp;
@@ -227,7 +228,7 @@ public class FormalDog : MonoBehaviour
         }
         else
         {
-            Debug.Log(" Serial Error.");
+            //Debug.Log(" Serial Error.");
         }
     }
 

@@ -20,13 +20,13 @@ public class moveDog : MonoBehaviour
     void Start()
     {
         Dogfab = transform.GetChild(0).gameObject;
-        DogChestNd = GameObject.FindWithTag("DogChestNd");
-        //Debug.Log(DogChestNd);
-        DogHeadNd = GameObject.FindWithTag("DogHeadNd");
-        //Debug.Log(DogHeadNd);
-        Target = GameObject.FindWithTag("Target");
-        MainCam = GameObject.FindWithTag("MainCamera");
-        //Debug.Log(MainCam);
+        //DogChestNd = GameObject.FindWithTag("DogChestNd");
+        ////Debug.Log(DogChestNd);
+        //DogHeadNd = GameObject.FindWithTag("DogHeadNd");
+        ////Debug.Log(DogHeadNd);
+        //Target = GameObject.FindWithTag("Target");
+        //MainCam = GameObject.FindWithTag("MainCamera");
+        ////Debug.Log(MainCam);
         AnimDogAC = Dogfab.GetComponent<Animator>();
         Idle();
     }
@@ -43,6 +43,7 @@ public class moveDog : MonoBehaviour
         goVec.Normalize(); dogFace.Normalize();
 
         if ((goVec + oldVec).magnitude < (goVec.magnitude - 0.05)) isFallback = true;
+        else isFallback = false;
 
         dogPos = curVec;
         oldVec = goVec;
