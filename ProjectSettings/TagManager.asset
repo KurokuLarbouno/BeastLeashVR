@@ -10,6 +10,8 @@ TagManager:
   - DogChestNd
   - Rope
   - RopeEnd
+  - Dog
+  - Flag
   layers:
   - Default
   - TransparentFX

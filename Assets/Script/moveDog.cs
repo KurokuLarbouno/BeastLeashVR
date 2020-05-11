@@ -9,9 +9,9 @@ public class moveDog : MonoBehaviour
 
     private Animator AnimDogAC;
     private GameObject Dogfab, Target, DogChestNd, DogHeadNd, MainCam;
-    private bool sit = false, run = false, walk = false, idle = false, isWait = true;
+    private bool sit = false, run = false, walk = false, idle = false, isWait = true, isFallback = false;
     private int sitState = 0, runState = 0, walkState = 0, idleState = 0;
-    private Vector3 dogPos, dogFace, goVec;
+    private Vector3 dogPos, dogFace, goVec, oldVec;
     private float  runLength = 2.0f;
     private float sitTime = 15, changeTime = 10;
     private float  playerSp = 0;
@@ -41,16 +41,19 @@ public class moveDog : MonoBehaviour
         playerSp = tarLength / Time.deltaTime;
         //Debug.Log(playerSp);
         goVec.Normalize(); dogFace.Normalize();
-        //更新動畫
-        if (goVec.magnitude > 0)
-        {
-            //transform.LookAt(goVec + curVec);
-        }
-        //if (playerSp > 0.2) transform.rotation = convertRot;//Quaternion.Lerp(transform.rotation, convertRot, chaseTimer);
+
+        if ((goVec + oldVec).magnitude < (goVec.magnitude - 0.05)) isFallback = true;
+
         dogPos = curVec;
+        oldVec = goVec;
 
-
-        if (playerSp <= 0.1)
+        //更新動畫
+        if (isFallback)
+        {
+            Debug.Log("Anim fallback");
+            Idle();
+        }
+        else if (playerSp <= 0.1)
         {
             if (!isWait)
             {

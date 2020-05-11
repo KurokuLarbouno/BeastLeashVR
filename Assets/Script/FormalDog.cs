@@ -20,13 +20,17 @@ public class FormalDog : MonoBehaviour
     //繩子
     private float leashLength = 1;
     private bool initRope = false;
+    //碰牆事件
+    private float wallOffset = 2;    //宣告距離
+    RaycastHit hit;//射線方向
     //訊息
     private int sendMassage = 0;
     //walk mode
     private int walkMode = 2;//1: 朝target位置, 2:隨機, 3:不須改向, 4:等玩家給繩, 5:拉扯
-    private int walkAngle = 0, walkMdTm = 1, walkSp = 0, waitTm = 3;
+    private int walkAngle = 0, walkMdTm = 1, walkSp = 0, waitTm = 2;
     //run mode
     private int runSp = 5;
+    private bool isFallback = false;
     //stay mode
 
     // Start is called before the first frame update
@@ -80,12 +84,41 @@ public class FormalDog : MonoBehaviour
             Debug.Log("Leash length: " + leashLength);
         }
 
+        Ray forRay = new Ray(transform.position, transform.forward); //射線
+        if (Physics.Raycast(forRay, out hit, wallOffset))
+        {
+            //射線碰到TAG為EVN 觸發
+            if (hit.collider.tag == "wall")
+            {
+                Vector3 wallVec;
+                wallVec = Vector3.Reflect(transform.forward, hit.normal);// Vector3 Reflect(Vector3 inDirection, Vector3 inNormal);
+                wallVec = Vector3.ProjectOnPlane(wallVec, hit.normal);//Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
+                if (wallVec.magnitude == 0) { wallVec = Vector3.ProjectOnPlane(transform.right, hit.normal); }
+                wallVec.Normalize();
+                float rayDis = Vector3.Distance(hit.point, transform.position);
+                goVec = Vector3.Lerp(wallVec, transform.forward, rayDis / wallOffset + 0.1f);
+            }
+        }
+        //Debug.DrawLine(transform.position, goVec * 3 + transform.position);
+
         if (goVec.magnitude > 0.3 && Target.transform.gameObject.tag == "Target")
         {
             goVec.Normalize();
+
+            //拉扯檢查
+            Vector3 physicVec;
+            physicVec = transform.position - carPos;
+            physicVec.Normalize();
+            if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05)) 
+            { 
+                isFallback = true;
+                Debug.Log("formal fallback");
+            }
+            //預設方向及速度
             float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
             int outSp = carSp;
             angle *= 1.7f;
+            //各狀態微調
             if (dogState == 1)//1:walk
             {
                 //繩夠長:1之內隨機走
@@ -108,35 +141,36 @@ public class FormalDog : MonoBehaviour
                         walkMode = 4;
                     }
                 }
-                else if (goVec.magnitude >= 0.6 /*&& goVec.magnitude < leashLength*/)
-                {
-                    if (walkMode == 2)//變換方向後保持一陣子
-                    {
-                        walkMode = 3;
-                        walkAngle = (UnityEngine.Random.Range(0, 1) - 1) * 30;
-                        walkSp = UnityEngine.Random.Range(0, 2);
-                        outSp += walkSp;
-                        angle += walkAngle;
-                        this.Invoke("changeDir", walkMdTm + UnityEngine.Random.Range(0, 1));
-                        //Debug.Log("change dir");
-                    }
-                    else if (walkMode == 3)//保持方向速度
-                    {
-                        angle += walkAngle;
-                        outSp += walkSp;
-                    }
-                }
-                else if (goVec.magnitude <0.7)//正規走
-                {
-                    walkMode = 1;
-                    //CancelInvoke();
-                }
+                //else if (goVec.magnitude >= 0.6 /*&& goVec.magnitude < leashLength*/)
+                //{
+                //    if (walkMode == 2)//變換方向後保持一陣子
+                //    {
+                //        walkMode = 3;
+                //        walkAngle = (UnityEngine.Random.Range(0, 1) - 1) * 30;
+                //        walkSp = UnityEngine.Random.Range(0, 2);
+                //        outSp += walkSp;
+                //        angle += walkAngle;
+                //        this.Invoke("changeDir", walkMdTm + UnityEngine.Random.Range(0, 1));
+                //        //Debug.Log("change dir");
+                //    }
+                //    else if (walkMode == 3)//保持方向速度
+                //    {
+                //        angle += walkAngle;
+                //        outSp += walkSp;
+                //    }
+                //}
+                //else if (goVec.magnitude <0.7)//正規走
+                //{
+                //    walkMode = 1;
+                //    //CancelInvoke();
+                //}
             }
             else if (dogState == 2)//2:rush
             {
                 //如果狗後退，先切walk
                 carSp = runSp;
                 //Debug.Log("RUN!");
+                if (isFallback) { dogState = 1; }
             }
             else if (dogState == 3)//3:stay
             {
@@ -160,6 +194,7 @@ public class FormalDog : MonoBehaviour
         {
             sendMassage = 100000;
         }
+        carPos = transform.position;
         //try
         //{
         //    String value = sp.ReadLine();
