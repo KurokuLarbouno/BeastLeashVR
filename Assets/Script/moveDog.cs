@@ -120,6 +120,11 @@ public class moveDog : MonoBehaviour
         runState = Random.Range(0, 2);
         AnimDogAC.SetInteger("runState", runState);
     }
+    public void Bark(Transform obj)
+    {
+        Debug.Log("Bark At " + obj);
+        
+    }
     private void ChangeState()
     {
         Random.InitState(System.Guid.NewGuid().GetHashCode());

@@ -37,7 +37,6 @@ public class FormalDog : MonoBehaviour
     void Start()
     {
         //Target = GameObject.Find("RoadFinder");
-        Target = GameObject.Find("Target");
         Tracker = GameObject.FindWithTag("Tracker");
         Rope = GameObject.FindWithTag("Rope");
         //Serial
@@ -55,147 +54,156 @@ public class FormalDog : MonoBehaviour
             this.InvokeRepeating("setMassage", 1.0f, 0.15f);//"methodName" in "time" seconds, then repeatedly every "repeatRate" seconds.
             isTimerSet = true;
         }
-        //車子定位
-        Vector3 trackPos = Tracker.transform.position;
-        Quaternion trackRot = Tracker.transform.rotation;
-        trackRot *= Quaternion.Euler(90, 0, 0);
-        carPos = new Vector3(trackPos.x, 0, trackPos.z);
-        transform.position = carPos;
-        transform.rotation = new Quaternion(0, trackRot.y, 0, trackRot.w);
-
-        //車子面向
-        trackPos = transform.forward;
-        carFace = new Vector3(trackPos.x, 0, trackPos.z);
-        carFace.Normalize();
-        //目標方向
-        tarPos = Target.transform.position;
-        tarPos = new Vector3(tarPos.x, 0, tarPos.z);
-        Vector3 goVec = tarPos - carPos;
-        //Debug.Log(goVec.magnitude);
-        //繩子方向
-        ropePos = Rope.transform.position;
-        ropePos = new Vector3(ropePos.x, 0, ropePos.z);
-        Vector3 ropeVec = carPos - ropePos;
-        //Debug.Log("Rope" + ropeVec.magnitude);
-        if (initRope)
+        if (Target!= null)
         {
-            //leashLength = ropeVec.magnitude;
-            leashLength = 1.0f;
-            initRope = true;
-            Debug.Log("Leash length: " + leashLength);
-        }
+            //車子定位
+            Vector3 trackPos = Tracker.transform.position;
+            Quaternion trackRot = Tracker.transform.rotation;
+            trackRot *= Quaternion.Euler(90, 0, 0);
+            carPos = new Vector3(trackPos.x, 0, trackPos.z);
+            transform.position = carPos;
+            transform.rotation = new Quaternion(0, trackRot.y, 0, trackRot.w);
 
-
-        if (goVec.magnitude > 0.5 && Target.transform.gameObject.tag == "Target")
-        {
-            goVec.Normalize();
-            //牆壁檢查
-            Ray forRay = new Ray(transform.position, transform.forward); //射線
-            if (Physics.Raycast(forRay, out hit, wallOffset))
+            //車子面向
+            trackPos = transform.forward;
+            carFace = new Vector3(trackPos.x, 0, trackPos.z);
+            carFace.Normalize();
+            //目標方向
+            tarPos = Target.transform.position;
+            tarPos = new Vector3(tarPos.x, 0, tarPos.z);
+            Vector3 goVec = tarPos - carPos;
+            //Debug.Log(goVec.magnitude);
+            //繩子方向
+            ropePos = Rope.transform.position;
+            ropePos = new Vector3(ropePos.x, 0, ropePos.z);
+            Vector3 ropeVec = carPos - ropePos;
+            //Debug.Log("Rope" + ropeVec.magnitude);
+            if (initRope)
             {
-                //射線碰到TAG為EVN 觸發
-                if (hit.collider.tag == "wall")
-                {
-                    Vector3 wallVec;
-                    wallVec = Vector3.Reflect(transform.forward, hit.normal);// Vector3 Reflect(Vector3 inDirection, Vector3 inNormal);
-                    wallVec = Vector3.ProjectOnPlane(wallVec, hit.normal);//Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
-                    if (wallVec.magnitude == 0) { wallVec = Vector3.ProjectOnPlane(transform.right, hit.normal); }
-                    wallVec.Normalize();
-                    float rayDis = Vector3.Distance(hit.point, transform.position);
-                    goVec = Vector3.Lerp(wallVec, goVec, rayDis / wallOffset + 0.1f);
-                }
+                //leashLength = ropeVec.magnitude;
+                leashLength = 1.0f;
+                initRope = true;
+                Debug.Log("Leash length: " + leashLength);
             }
-            //Debug.DrawLine(transform.position, goVec * 3 + transform.position);
-            //拉扯檢查
-            Vector3 physicVec;
-            physicVec = transform.position - carPos;
-            physicVec.Normalize();
-            if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05)) 
-            { 
-                isFallback = true;
-                Debug.Log("formal fallback");
-            }else isFallback = false;
-            //預設方向及速度
-            float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
-            int outSp = carSp;
-            angle *= 1.7f;
-            //各狀態微調
-            if (dogState == 1)//1:walk
+
+            if (goVec.magnitude > 0.5 && Target.transform.gameObject.tag == "Target")
             {
-                //繩夠長:1之內隨機走
-                //繩不夠:一秒拉一下
-                if (ropeVec.magnitude > (leashLength - 0.3))
+                goVec.Normalize();
+                //牆壁檢查
+                Ray forRay = new Ray(transform.position, transform.forward); //射線
+                if (Physics.Raycast(forRay, out hit, wallOffset))
                 {
-                    if (walkMode == 4)
+                    //射線碰到TAG為EVN 觸發
+                    if (hit.collider.tag == "wall")
                     {
-                        outSp = 0;
-                    }
-                    else if (walkMode == 5)
-                    {
-                        //outSp = carSp;//保持原狀
-                        walkSp = UnityEngine.Random.Range(0, 1);
-                        outSp += walkSp;
-                    }
-                    else
-                    {
-                        this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1)-2);
-                        walkMode = 4;
+                        Vector3 wallVec;
+                        wallVec = Vector3.Reflect(transform.forward, hit.normal);// Vector3 Reflect(Vector3 inDirection, Vector3 inNormal);
+                        wallVec = Vector3.ProjectOnPlane(wallVec, hit.normal);//Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal);
+                        if (wallVec.magnitude == 0) { wallVec = Vector3.ProjectOnPlane(transform.right, hit.normal); }
+                        wallVec.Normalize();
+                        float rayDis = Vector3.Distance(hit.point, transform.position);
+                        goVec = Vector3.Lerp(wallVec, goVec, rayDis / wallOffset + 0.1f);
                     }
                 }
-                //else if (goVec.magnitude >= 0.6 /*&& goVec.magnitude < leashLength*/)
-                //{
-                //    if (walkMode == 2)//變換方向後保持一陣子
-                //    {
-                //        walkMode = 3;
-                //        walkAngle = (UnityEngine.Random.Range(0, 1) - 1) * 30;
-                //        walkSp = UnityEngine.Random.Range(0, 2);
-                //        outSp += walkSp;
-                //        angle += walkAngle;
-                //        this.Invoke("changeDir", walkMdTm + UnityEngine.Random.Range(0, 1));
-                //        //Debug.Log("change dir");
-                //    }
-                //    else if (walkMode == 3)//保持方向速度
-                //    {
-                //        angle += walkAngle;
-                //        outSp += walkSp;
-                //    }
-                //}
-                //else if (goVec.magnitude <0.7)//正規走
-                //{
-                //    walkMode = 1;
-                //    //CancelInvoke();
-                //}
-            }
-            else if (dogState == 2)//2:rush
-            {
-                //如果狗後退，先切walk
-                carSp = runSp;
-                //Debug.Log("RUN!");
-                if (isFallback) { dogState = 1; }
-            }
-            else if (dogState == 3)//3:stay
-            {
+                //Debug.DrawLine(transform.position, goVec * 3 + transform.position);
+                //拉扯檢查
+                Vector3 physicVec;
+                physicVec = transform.position - carPos;
+                physicVec.Normalize();
+                if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05))
+                {
+                    isFallback = true;
+                    Debug.Log("formal fallback");
+                }
+                else isFallback = false;
+                //預設方向及速度
+                float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
+                int outSp = carSp;
+                angle *= 1.7f;
+                //各狀態微調
+                if (dogState == 1)//1:walk
+                {
+                    //繩夠長:1之內隨機走
+                    //繩不夠:一秒拉一下
+                    if (ropeVec.magnitude > (leashLength - 0.3))
+                    {
+                        if (walkMode == 4)
+                        {
+                            outSp = 0;
+                        }
+                        else if (walkMode == 5)
+                        {
+                            //outSp = carSp;//保持原狀
+                            walkSp = UnityEngine.Random.Range(0, 1);
+                            outSp += walkSp;
+                        }
+                        else
+                        {
+                            this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1) - 2);
+                            walkMode = 4;
+                        }
+                    }
+                    //else if (goVec.magnitude >= 0.6 /*&& goVec.magnitude < leashLength*/)
+                    //{
+                    //    if (walkMode == 2)//變換方向後保持一陣子
+                    //    {
+                    //        walkMode = 3;
+                    //        walkAngle = (UnityEngine.Random.Range(0, 1) - 1) * 30;
+                    //        walkSp = UnityEngine.Random.Range(0, 2);
+                    //        outSp += walkSp;
+                    //        angle += walkAngle;
+                    //        this.Invoke("changeDir", walkMdTm + UnityEngine.Random.Range(0, 1));
+                    //        //Debug.Log("change dir");
+                    //    }
+                    //    else if (walkMode == 3)//保持方向速度
+                    //    {
+                    //        angle += walkAngle;
+                    //        outSp += walkSp;
+                    //    }
+                    //}
+                    //else if (goVec.magnitude <0.7)//正規走
+                    //{
+                    //    walkMode = 1;
+                    //    //CancelInvoke();
+                    //}
+                }
+                else if (dogState == 2)//2:rush
+                {
+                    //如果狗後退，先切walk
+                    carSp = runSp;
+                    //Debug.Log("RUN!");
+                    if (isFallback) { dogState = 1; }
+                }
+                else if (dogState == 3)//3:stay
+                {
 
-            }
+                }
 
-            sendMassage = 10 + outSp;
-            if (angle >= 0)
-            {
-                if (angle > 85) angle = 85;//75011
-                sendMassage += ((int)angle) * 1000 + 100;
+                sendMassage = 10 + outSp;
+                if (angle >= 0)
+                {
+                    if (angle > 85) angle = 85;//75011
+                    sendMassage += ((int)angle) * 1000 + 100;
+                }
+                else
+                {
+                    if (angle < -85) angle = -85;//75111
+                    sendMassage += -1 * ((int)angle) * 1000;
+                }
+                sendMassage += 100000;
             }
             else
             {
-                if (angle < -85) angle = -85;//75111
-                sendMassage += -1 * ((int)angle) * 1000;
+                sendMassage = 100000;
             }
-            sendMassage += 100000;
+            carPos = transform.position;
         }
         else
         {
+            Target = GameObject.FindWithTag("Target");
             sendMassage = 100000;
         }
-        carPos = transform.position;
+
         //try
         //{
         //    String value = sp.ReadLine();
