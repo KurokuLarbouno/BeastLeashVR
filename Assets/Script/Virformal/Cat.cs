@@ -7,6 +7,7 @@ public class Cat : MonoBehaviour
     public int State = 0;
     private GameObject StageManager = null;
     private Animator AnimCatAC;
+    private bool isInit = false;
 
     void Start()
     {
@@ -17,16 +18,21 @@ public class Cat : MonoBehaviour
 
     void Update()
     {
-        switch (State)
+        if (!isInit)
         {
-            case 1:
-                if (!GetComponent<MeshRenderer>().enabled) GetComponent<MeshRenderer>().enabled = true;
-                break;
-            case 2:
-                if (!AnimCatAC.GetBool("isLooked")) AnimCatAC.SetBool("isLooked",true);
-                break;
-            default:
-                break;
+            switch (State)
+            {
+                case 1:
+                    if (!GetComponent<MeshRenderer>().enabled) GetComponent<MeshRenderer>().enabled = true;
+                    isInit = true;
+                    break;
+                case 2:
+                    if (!AnimCatAC.GetBool("isLooked")) AnimCatAC.SetBool("isLooked", true);
+                    isInit = true;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -36,10 +42,12 @@ public class Cat : MonoBehaviour
         State = 3;
         enabled = false;
         Debug.Log("Cat Out");
+        isInit = false;
     }
     public void CatLooked()
     {
         StageManager.GetComponent<StageManerger>().CatLooked();
         State = 2;
+        isInit = false;
     }
 }

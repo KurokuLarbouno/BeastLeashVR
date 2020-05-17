@@ -97,12 +97,14 @@ public class StageManerger : MonoBehaviour
         Debug.Log("StageOneEnded");
         stageState = 2;
         isInit = false;
+        GetComponent<Cast>().enabled = true;
     }
     public void StageTwoEnded() //狗衝過去窗戶
     {
         Debug.Log("StageTwoEnded");
         stageState = 3;
         isInit = false;
+        GetComponent<Cast>().enabled = false;
     }
     public void StageThereEnded() //狗因鴨靠人
     {
