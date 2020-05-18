@@ -74,6 +74,7 @@ public class StageManerger : MonoBehaviour
                     if (isCatLeaved) //貓到窗
                     {
                         CheckPoint.GetComponent<CheckPoint>().State = 2;//狗向前衝
+                        CheckPoint.GetComponent<CheckPoint>().isAsigned = false;
                         Dog.GetComponent<FormalDog>().dogState = 2;//衝
                     }
                     isInit = true;

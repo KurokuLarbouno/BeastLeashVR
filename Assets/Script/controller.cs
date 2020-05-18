@@ -25,10 +25,9 @@ public class controller : MonoBehaviour
 
     void Start()
     {
-        Target = GameObject.Find("Target");
+        Target = GameObject.Find("Duck");
     }
-      
-        private void Update()
+    void Update()
     {
         if (m_GrabAction.GetStateDown(m_Pose.inputSource)) 
         {

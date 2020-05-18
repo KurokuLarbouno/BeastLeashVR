@@ -51,7 +51,7 @@ public class moveDog : MonoBehaviour
         //更新動畫
         if (isFallback)
         {
-            Debug.Log("Anim fallback");
+            //Debug.Log("Anim fallback");
             Idle();
         }
         else if (playerSp <= 0.1)

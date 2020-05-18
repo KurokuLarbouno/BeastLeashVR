@@ -9,7 +9,7 @@ public class CheckPoint : MonoBehaviour
     private int checkPoint = 0;
     private GameObject StageManager = null;
     private Transform[] points;
-    private bool isAsigned = false;
+    public bool isAsigned = false;
     void Start()
     {
         points = GetComponentsInChildren<Transform>();//放置所有小孩，0是自己
@@ -37,11 +37,11 @@ public class CheckPoint : MonoBehaviour
                     if (!points[1].GetComponent<Point>().isArrived)
                     { points[1].gameObject.SetActive(true); checkPoint = 1; }
                     else if (!points[2].GetComponent<Point>().isArrived)
-                    { points[1].gameObject.SetActive(false); points[2].gameObject.SetActive(true); checkPoint = 2; }
+                    { points[1].gameObject.SetActive(false); points[1].gameObject.tag = "Untagged"; points[2].gameObject.SetActive(true); checkPoint = 2; }
                     else if (!points[3].GetComponent<Point>().isArrived)
-                    { points[2].gameObject.SetActive(false); points[3].gameObject.SetActive(true); checkPoint = 3; }
+                    { points[2].gameObject.SetActive(false); points[2].gameObject.tag = "Untagged"; points[3].gameObject.SetActive(true); checkPoint = 3; }
                     else if (points[3].GetComponent<Point>().isArrived)
-                    { points[3].gameObject.SetActive(false); StageOneEnd(); checkPoint = 4; }
+                    { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; StageOneEnd(); checkPoint = 4; }
                     isAsigned = true;
                     break;
                 case 2:

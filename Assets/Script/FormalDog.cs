@@ -29,7 +29,7 @@ public class FormalDog : MonoBehaviour
     private int walkMode = 2;//1: 朝target位置, 2:隨機, 3:不須改向, 4:等玩家給繩, 5:拉扯
     private int walkAngle = 0, walkMdTm = 1, walkSp = 0, waitTm = 2;
     //run mode
-    private int runSp = 5;
+    private int runSp = 2;
     private bool isFallback = false;
     //stay mode
 
@@ -38,6 +38,7 @@ public class FormalDog : MonoBehaviour
     {
         //Target = GameObject.Find("RoadFinder");
         Tracker = GameObject.FindWithTag("Tracker");
+        Debug.Log(Tracker.name);
         Rope = GameObject.FindWithTag("Rope");
         //Serial
         sp.Open();
@@ -54,16 +55,21 @@ public class FormalDog : MonoBehaviour
             this.InvokeRepeating("setMassage", 1.0f, 0.15f);//"methodName" in "time" seconds, then repeatedly every "repeatRate" seconds.
             isTimerSet = true;
         }
-        if (Target!= null)
-        {
-            //車子定位
-            Vector3 trackPos = Tracker.transform.position;
-            Quaternion trackRot = Tracker.transform.rotation;
-            trackRot *= Quaternion.Euler(90, 0, 0);
-            carPos = new Vector3(trackPos.x, 0, trackPos.z);
-            transform.position = carPos;
-            transform.rotation = new Quaternion(0, trackRot.y, 0, trackRot.w);
+        //車子定位
+        Vector3 trackPos = Tracker.transform.position;
+        Quaternion trackRot = Tracker.transform.rotation;
+        trackRot *= Quaternion.Euler(90, 0, 0);
+        carPos = new Vector3(trackPos.x, 0.06f, trackPos.z);
+        transform.position = carPos;
+        transform.rotation = new Quaternion(0, trackRot.y, 0, trackRot.w);
 
+        if (Target != null)
+        {
+            if (Target.transform.gameObject.tag == "Untagged")
+            {
+                Target = null;
+                Debug.Log("untag");
+            }
             //車子面向
             trackPos = transform.forward;
             carFace = new Vector3(trackPos.x, 0, trackPos.z);

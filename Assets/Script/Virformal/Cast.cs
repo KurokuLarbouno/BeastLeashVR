@@ -10,7 +10,7 @@ public class Cast : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log(Camera.main.name);//找到是哪個控制
+        //Debug.Log(Camera.main.name);//找到是哪個控制
         Ray eyeray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2.0f, Camera.main.pixelHeight / 2.0f));
         RaycastHit hit;
         if(Physics.Raycast(eyeray, out hit))
