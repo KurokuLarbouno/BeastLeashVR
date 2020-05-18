@@ -23,12 +23,12 @@ public class Point : MonoBehaviour
     }
     private void OnTriggerEnter(Collider col)
     {
-        if (col.transform.tag == "Player") isChecking = true;
+        if (col.transform.tag == "PlayerCube") isChecking = true;
         stayTm = 0.0f; isArrived = false;
     }
     private void OnTriggerExit(Collider col)
     {
-        if (col.transform.tag == "Player") isChecking = false;
+        if (col.transform.tag == "PlayerCube") isChecking = false;
         stayTm = 0.0f; isArrived = false;
     }
 }

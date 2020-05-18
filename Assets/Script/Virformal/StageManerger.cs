@@ -123,7 +123,7 @@ public class StageManerger : MonoBehaviour
     private void OnTriggerEnter(Collider col)
     {
         Debug.Log("Start!");
-        if (col.transform.tag == "Player" && !isInit)
+        if (col.transform.tag == "PlayerCube" && !isInit)
         {
             stageState = 1;
             isInit = false;

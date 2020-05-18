@@ -17,6 +17,7 @@ TagManager:
   - wall
   - Cat
   - StageManerger
+  - PlayerCube
   layers:
   - Default
   - TransparentFX
