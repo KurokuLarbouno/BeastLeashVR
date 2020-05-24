@@ -12,7 +12,7 @@ public class Point : MonoBehaviour
         isArrived = false;
         stayTm = 0.0f;
         isChecking = false;
-}
+    }
     void Update()
     {
         if (isChecking)
@@ -20,6 +20,7 @@ public class Point : MonoBehaviour
             stayTm += Time.deltaTime;
             if (stayTm > treshold) isArrived = true;
         }
+        Debug.DrawLine(transform.position, transform.position + transform.forward);
     }
     private void OnTriggerEnter(Collider col)
     {

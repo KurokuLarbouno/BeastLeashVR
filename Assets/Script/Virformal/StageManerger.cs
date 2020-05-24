@@ -62,7 +62,9 @@ public class StageManerger : MonoBehaviour
                         //貓在書櫃上喵喵叫
                         Debug.Log("Stagetwo");
                         Cat.GetComponent<Cat>().State = 1; //Meow
-                                                           //Invoke -> Dog.GetComponent<Dog>().Bark(Cat.transform.position);//一段時間後對貓叫
+                        Cat.SetActive(true);
+                        Debug.Log(Cat);
+                        //Invoke -> Dog.GetComponent<Dog>().Bark(Cat.transform.position);//一段時間後對貓叫
                         this.Invoke("Bark", 5.0f);
                     }
                     //人看到後，貓開始跑到窗戶                                   
@@ -123,13 +125,13 @@ public class StageManerger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider col)
     {
-        Debug.Log("Start!");
         if (col.transform.tag == "PlayerCube" && !isInit)
         {
+            Debug.Log("Start!");
             stageState = 1;
             isInit = false;
+            GetComponent<BoxCollider>().enabled = false;
         }
-        GetComponent<BoxCollider>().enabled = false;
     }
     private void Bark()
     {

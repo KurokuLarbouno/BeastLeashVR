@@ -6,14 +6,15 @@ public class Cat : MonoBehaviour
 {
     public int State = 0;
     private GameObject StageManager = null;
-    private Animator AnimCatAC;
+    private Animator AnimCatAC, modleAC;
     private bool isInit = false;
 
     void Start()
     {
         StageManager = GameObject.FindWithTag("StageManerger");
         AnimCatAC = GetComponent<Animator>();
-        GetComponent<MeshRenderer>().enabled = false;
+        gameObject.SetActive(false);
+        modleAC = transform.GetChild(0).GetComponent<Animator>();
     }
 
     void Update()
@@ -23,7 +24,7 @@ public class Cat : MonoBehaviour
             switch (State)
             {
                 case 1:
-                    if (!GetComponent<MeshRenderer>().enabled) GetComponent<MeshRenderer>().enabled = true;
+                    if (!gameObject.activeSelf) gameObject.SetActive(true); 
                     isInit = true;
                     break;
                 case 2:
@@ -40,9 +41,19 @@ public class Cat : MonoBehaviour
     {
         StageManager.GetComponent<StageManerger>().CatLeaved();
         State = 3;
-        enabled = false;
-        Debug.Log("Cat Out");
+        gameObject.SetActive(false);
+        //Debug.Log("Cat Out");
         isInit = false;
+    }
+    public void CatWalk()
+    {
+        modleAC.SetBool("walk", true);
+        modleAC.SetBool("hop", false);
+    }
+    public void CatHop()
+    {
+        modleAC.SetBool("walk", false);
+        modleAC.SetBool("hop", true);
     }
     public void CatLooked()
     {
