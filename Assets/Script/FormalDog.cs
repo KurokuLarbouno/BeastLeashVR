@@ -22,7 +22,7 @@ public class FormalDog : MonoBehaviour
     private float leashLength = 1;
     private bool initRope = false;
     //碰牆事件
-    private float wallOffset = 0.4f;    //宣告距離
+    private float wallOffset = 1.0f;    //宣告距離
     RaycastHit hit;//射線方向
     //訊息
     private int sendMassage = 0;
@@ -95,25 +95,26 @@ public class FormalDog : MonoBehaviour
                     Debug.Log("Leash length: " + leashLength);
                 }
 
-                if (goVec.magnitude > 0.5 && Target.transform.gameObject.tag == "Target")
+                if (goVec.magnitude > 0.4f && Target.transform.gameObject.tag == "Target")
                 {
                     goVec.Normalize();
                     //牆壁檢查
                     Ray forRay = new Ray(transform.position, transform.forward); //射線
                     if (Physics.Raycast(forRay, out hit, wallOffset))
                     {
-                        //射線碰到TAG為EVN 觸發
+                        //射線碰到TAG為tar 觸發
                         if (hit.collider.tag == "Target")
                         {
-                            if (hit.transform.name != "Duck" || hit.transform.name != "Point04") ;
-                            Vector3 wallVec;
-                            wallVec = hit.transform.forward;
-                            wallVec.Normalize();
-                            float rayDis = Vector3.Distance(hit.point, transform.position);
-                            goVec = Vector3.Lerp(wallVec, goVec, rayDis / wallOffset + 0.1f);
+                            if (hit.transform.name != "Duck" && hit.transform.name != "Point04")
+                            {
+                                Vector3 guideVec;
+                                guideVec = hit.transform.forward;
+                                float rayDis = Vector3.Distance(hit.point, transform.position);
+                                Debug.Log("Hit Target");
+                                goVec = Vector3.Lerp(guideVec, goVec, rayDis / wallOffset + 0.4f);
+                            }
                         }
                     }
-                    Debug.DrawLine(transform.position, goVec * 3 + transform.position);
                     //拉扯檢查
                     Vector3 physicVec;
                     physicVec = transform.position - carPos;
@@ -179,6 +180,7 @@ public class FormalDog : MonoBehaviour
                         if (angle < -85) angle = -85;//75111
                         sendMassage += -1 * ((int)angle) * 1000;
                     }
+                    Debug.DrawLine(transform.position, goVec * 1 + transform.position, Color.green);
                     sendMassage += 100000;
                 }
                 else
