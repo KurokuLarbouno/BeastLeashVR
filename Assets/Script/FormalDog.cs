@@ -98,23 +98,23 @@ public class FormalDog : MonoBehaviour
                 if (goVec.magnitude > 0.4f && Target.transform.gameObject.tag == "Target")
                 {
                     goVec.Normalize();
-                    //牆壁檢查
-                    Ray forRay = new Ray(transform.position, transform.forward); //射線
-                    if (Physics.Raycast(forRay, out hit, wallOffset))
-                    {
-                        //射線碰到TAG為tar 觸發
-                        if (hit.collider.tag == "Target")
-                        {
-                            if (hit.transform.name != "Duck" && hit.transform.name != "Point04")
-                            {
-                                Vector3 guideVec;
-                                guideVec = hit.transform.forward;
-                                float rayDis = Vector3.Distance(hit.point, transform.position);
-                                Debug.Log("Hit Target");
-                                goVec = Vector3.Lerp(guideVec, goVec, rayDis / wallOffset + 0.4f);
-                            }
-                        }
-                    }
+
+                    if (goVec.magnitude  > 0.6f && goVec.magnitude > 1.0f)  //距離1.0~0.6時，會先以反方向繞出一點轉進去
+                        goVec = Vector3.Lerp(-Target.transform.forward, goVec, (goVec.magnitude - 0.6f) / 0.4f * 0.3f);
+                    ////牆壁檢查
+                    //Ray forRay = new Ray(transform.position, transform.forward); //射線
+                    //if (Physics.Raycast(forRay, out hit, wallOffset))
+                    //{
+                    //    //射線碰到TAG為tar 觸發
+                    //    if (hit.collider.tag == "wall")
+                    //    {
+                    //        Vector3 guideVec;
+                    //        guideVec = hit.transform.forward;
+                    //        float rayDis = Vector3.Distance(hit.point, transform.position);
+                    //        Debug.Log("Hit Target");
+                    //        goVec = Vector3.Lerp(guideVec, goVec, rayDis / wallOffset + 0.4f);
+                    //    }
+                    //}
                     //拉扯檢查
                     Vector3 physicVec;
                     physicVec = transform.position - carPos;

@@ -1,20 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class moveDog : MonoBehaviour
 {
 
     int dogState = 1;//1:walk, 2:rush, 3:stay
-
+    public bool isbarking = false;
     private Animator AnimDogAC;
-    private GameObject Dogfab, Target, DogChestNd, DogHeadNd, MainCam;
+    private GameObject Dogfab, Target, DogChestNd, DogHeadNd, MainCam, Cat;
     private bool sit = false, run = false, walk = false, idle = false, isWait = true, isFallback = false;
     private int sitState = 0, runState = 0, walkState = 0, idleState = 0;
     private Vector3 dogPos, dogFace, goVec, oldVec;
     private float  runLength = 2.0f;
     private float sitTime = 15, changeTime = 10;
     private float  playerSp = 0;
+    private AudioSource dogAS;
 
 
     void Start()
@@ -28,6 +30,7 @@ public class moveDog : MonoBehaviour
         //MainCam = GameObject.FindWithTag("MainCamera");
         ////Debug.Log(MainCam);
         AnimDogAC = Dogfab.GetComponent<Animator>();
+        dogAS = GetComponent<AudioSource>();
         Idle();
     }
 
@@ -75,11 +78,17 @@ public class moveDog : MonoBehaviour
     }
     private void LateUpdate()
     {
-        if (goVec.magnitude > 0)
+        if (goVec.magnitude > 0.1f)
         {
             Quaternion convertRot = Quaternion.LookRotation(goVec);
             convertRot *= Quaternion.Euler(0, -90, -180 - 8.12f);
             //DogChestNd.transform.rotation = convertRot;//Quaternion.Lerp(DogChestNd.transform.rotation, convertRot, ttt);
+        }
+        if (isbarking)
+        {
+            Quaternion lookRot = Quaternion.LookRotation(Cat.transform.position - transform.position);
+            Vector3 lookElr = lookRot.eulerAngles;
+            transform.rotation = Quaternion.Euler(0.0f, lookElr.y, lookElr.z); 
         }
 
     }
@@ -111,7 +120,7 @@ public class moveDog : MonoBehaviour
         //Debug.Log("SIT");
         this.Invoke("ChangeState", changeTime + Random.Range(0, 9) - 4);
     }
-    private void Run()
+    public void Run()
     {
         this.CancelInvoke();
         sit = false; run = true; walk = false; idle = false;
@@ -119,11 +128,16 @@ public class moveDog : MonoBehaviour
         //Debug.Log("RUN");
         runState = Random.Range(0, 2);
         AnimDogAC.SetInteger("runState", runState);
+        dogAS.Stop();
     }
     public void Bark(Transform obj)
     {
-        Debug.Log("Bark At " + obj);
-        
+        //Debug.Log("Bark At " + obj);
+        Cat = obj.gameObject;
+        sit = false; run = false; walk = false; idle = false;
+        AnimDogAC.SetTrigger("bark");
+        dogAS.Play();
+        isbarking = true;
     }
     private void ChangeState()
     {

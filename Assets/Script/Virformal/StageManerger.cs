@@ -84,6 +84,7 @@ public class StageManerger : MonoBehaviour
                 case 3:
                     Debug.Log("StageThree");
                     Dog.GetComponent<FormalDog>().dogState = 3;//原地
+                    Bark();
                     Duck.GetComponent<Duck>().State = 1;//發光
                     isInit = true;
                     break;
@@ -122,6 +123,8 @@ public class StageManerger : MonoBehaviour
     public void CatLeaved()
     {
         isCatLeaved = true; isInit = false;
+        Dog.GetComponent<moveDog>().Run();
+        Dog.GetComponent<moveDog>().isbarking = false;
     }
     private void OnTriggerEnter(Collider col)
     {

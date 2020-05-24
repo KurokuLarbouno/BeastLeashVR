@@ -5,7 +5,7 @@ using UnityEngine;
 public class Point : MonoBehaviour
 {
     public bool isArrived = false;
-    private float stayTm = 0.0f, treshold = 5.0f;
+    private float stayTm = 0.0f, treshold = 1.0f;
     private bool isChecking = false;
     private void Start()
     {

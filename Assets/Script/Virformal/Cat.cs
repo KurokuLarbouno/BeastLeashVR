@@ -8,6 +8,7 @@ public class Cat : MonoBehaviour
     private GameObject StageManager = null;
     private Animator AnimCatAC, modleAC;
     private bool isInit = false;
+    private AudioSource catAS;
 
     void Start()
     {
@@ -15,6 +16,7 @@ public class Cat : MonoBehaviour
         AnimCatAC = GetComponent<Animator>();
         gameObject.SetActive(false);
         modleAC = transform.GetChild(0).GetComponent<Animator>();
+        catAS = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -26,6 +28,7 @@ public class Cat : MonoBehaviour
                 case 1:
                     if (!gameObject.activeSelf) gameObject.SetActive(true); 
                     isInit = true;
+                    catAS.Play();
                     break;
                 case 2:
                     if (!AnimCatAC.GetBool("isLooked")) AnimCatAC.SetBool("isLooked", true);
@@ -59,6 +62,7 @@ public class Cat : MonoBehaviour
     {
         StageManager.GetComponent<StageManerger>().CatLooked();
         State = 2;
+        catAS.Stop();
         isInit = false;
     }
 }
