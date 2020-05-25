@@ -40,21 +40,30 @@ public class CheckPoint : MonoBehaviour
                     { points[1].gameObject.SetActive(false); points[1].gameObject.tag = "Untagged"; points[2].gameObject.SetActive(true); checkPoint = 2; }
                     else if (!points[3].GetComponent<Point>().isArrived)
                     { points[2].gameObject.SetActive(false); points[2].gameObject.tag = "Untagged"; points[3].gameObject.SetActive(true); checkPoint = 3; }
-                    else if (points[3].GetComponent<Point>().isArrived)
-                    { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; StageOneEnd(); checkPoint = 4; }
+                    else if (!points[4].GetComponent<Point>().isArrived)
+                    { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; points[4].gameObject.SetActive(true); checkPoint = 4; StageOneEnd(); }
                     isAsigned = true;
                     break;
                 case 2:
-                    if (!points[4].GetComponent<Point>().isArrived) { points[4].gameObject.SetActive(true);}
-                    else { points[4].tag = "Untagged"; StageTwoEnd(); }
-            isAsigned = true;
+                    if (points[4].GetComponent<Point4>().isArrived) {points[4].tag = "Untagged";points[4].gameObject.SetActive(false); checkPoint = 0; StageTwoEnd(); }
+                    isAsigned = true;
+                    State = 3;
                     break;
                 case 3:
                     break;
                 default:
                     break;
             }
-        }else if (checkPoint != 0 && points[checkPoint].GetComponent<Point>().isArrived)
+        }
+        else if (checkPoint == 4)
+        {
+            if (points[checkPoint].GetComponent<Point4>().isArrived)
+            {
+                isAsigned = false;
+                State = 2;
+            }
+        }
+        else if (checkPoint != 0 && points[checkPoint].GetComponent<Point>().isArrived)
         {
             isAsigned = false;
         }

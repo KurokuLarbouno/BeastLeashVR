@@ -78,6 +78,7 @@ public class StageManerger : MonoBehaviour
                         CheckPoint.GetComponent<CheckPoint>().State = 2;//狗向前衝
                         CheckPoint.GetComponent<CheckPoint>().isAsigned = false;
                         Dog.GetComponent<FormalDog>().dogState = 2;//衝
+                        Dog.GetComponent<moveDog>().StopBark();
                     }
                     isInit = true;
                     break;
@@ -89,7 +90,7 @@ public class StageManerger : MonoBehaviour
                     isInit = true;
                     break;
                 case 4:
-
+                    Dog.GetComponent<AudioSource>().Stop();
                     break;
                 default:
                     break;
@@ -115,6 +116,7 @@ public class StageManerger : MonoBehaviour
         Debug.Log("StageThereEnded");
         stageState = 4;
         isInit = false;
+        Dog.GetComponent<moveDog>().StopBark();
     }
     public void CatLooked()
     {

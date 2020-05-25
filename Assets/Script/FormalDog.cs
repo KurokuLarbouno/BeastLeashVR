@@ -163,9 +163,15 @@ public class FormalDog : MonoBehaviour
                     }
                     else if (dogState == 3)//3:stay
                     {
-                        if(goVec.magnitude > 0.2f)
+                        if(Target.name == "Duck")
+                        {
+                            dogState = 1;
+                        }
+                        if(goVec.magnitude > 0.1f)
                         {
                             carSp *= (int)(goVec.magnitude / 0.2f);
+                            carSp += 2;
+                            carSp %= 10;
                         }
                     }
 

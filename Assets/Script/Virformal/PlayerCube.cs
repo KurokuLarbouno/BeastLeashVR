@@ -10,7 +10,7 @@ public class PlayerCube : MonoBehaviour
     {
         GameObject Obj = GameObject.Find("VRCamera");
         HMD = Obj;
-        Debug.Log(Obj.name);
+        //Debug.Log(Obj.name);
     }
 
     // Update is called once per frame

@@ -19,6 +19,7 @@ public class Point : MonoBehaviour
         {
             stayTm += Time.deltaTime;
             if (stayTm > treshold) isArrived = true;
+            //Debug.Log(stayTm);
         }
         Debug.DrawLine(transform.position, transform.position + transform.forward);
     }
