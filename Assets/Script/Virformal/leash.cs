@@ -6,7 +6,7 @@ using Valve.VR;
 public class leash : MonoBehaviour
 {
     public GameObject VibrateManerger, Dog, Controller;
-    private float leashLimit = 1.0f, oldLength = 0, oldSP = 0;
+    private float leashLimit = 1.2f, oldLength = 0, oldSP = 0;
     private Vector3 oldPos;
     void Start()
     {
@@ -20,10 +20,10 @@ public class leash : MonoBehaviour
         float curSP = (LeashVec.magnitude - oldLength) / Time.deltaTime;
         float acc = (curSP - oldSP) / Time.deltaTime;
         //計算加速度
-        if(acc > 1.0f)
+        if(acc > 100.0f)
         {
             //震動(0, a*幅度. a*幅度. 0.1sec)
-            VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 80 * acc, 30 * acc, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
+            VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 15, 0.01f * acc, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
             //Debug.Log(acc);
         }
         if (LeashVec.magnitude > leashLimit) //繃直
@@ -42,6 +42,7 @@ public class leash : MonoBehaviour
             Dog.GetComponent<Chase>().isFallback = false;
             transform.position = curPos;
         }
+        transform.rotation = Controller.transform.GetChild(0).rotation;
         oldPos = curPos;  oldSP = curSP; oldLength = LeashVec.magnitude;
     }
 }
