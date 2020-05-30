@@ -939,6 +939,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b7f2beee4983e4384ab77bbb699ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactable: {fileID: 0}
+  renderer: {fileID: 0}
+  affectMaterial: 1
+  gripSqueeze:
+    actionPath: /actions/default/in/Squeeze
+    needsReinit: 0
   State: 0
 --- !u!114 &651891112
 MonoBehaviour:
@@ -2075,6 +2081,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 975313753465779279, guid: a16f60be934ae844e81ef641632a8506,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6055231871450390860, guid: a16f60be934ae844e81ef641632a8506,
         type: 3}
       propertyPath: m_Name
