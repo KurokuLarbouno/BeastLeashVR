@@ -23,7 +23,7 @@ public class leash : MonoBehaviour
         if(acc > 100.0f)
         {
             //震動(0, a*幅度. a*幅度. 0.1sec)
-            VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 15, 0.01f * acc, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
+            VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 15, 0.02f * acc, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
             //Debug.Log(acc);
         }
         if (LeashVec.magnitude > leashLimit) //繃直
@@ -34,8 +34,8 @@ public class leash : MonoBehaviour
             Dog.GetComponent<Chase>().isFallback = true;
             //震動(0, a*幅度. a*幅度. 0.1sec)
             //Debug.Log(acc);
-            VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 250 * flexpart, 100 * flexpart, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
-
+            if (Dog.GetComponent<Chase>().dogState == 2) VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 250 * flexpart, 100 * flexpart * 2, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
+            if (Dog.GetComponent<Chase>().dogState == 1) VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 250 * flexpart, 100 * flexpart, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
         }
         else
         {

@@ -25,6 +25,6 @@ public class VibrationManager : MonoBehaviour
     public void Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
     {
         //hapticAction.Execute(0, duration, frequency, amplitude, SteamVR_Input_Sources.RightHand);
-        SteamVR_Actions.default_Haptic.Execute(0, duration, frequency, amplitude, SteamVR_Input_Sources.RightHand);
+        //SteamVR_Actions.default_Haptic.Execute(0, duration, frequency, amplitude, SteamVR_Input_Sources.RightHand);
     }
 }

@@ -58,10 +58,24 @@ public class moveDog : MonoBehaviour
         //更新動畫
         if (isFallback)
         {
+            AnimDogAC.speed = 1;
             if (playerSp > 0.2f) Pull();
         }
-        else if (playerSp <= 0.2f)
+        else if (GetComponent<Chase>().dogState == 1 && crossVec.y < 0) 
         {
+            AnimDogAC.speed = playerSp;
+            isPulling = false;
+            Walk(); /*Debug.Log("WALK");*/ isWait = false;
+        }
+        else if (GetComponent<Chase>().dogState == 2 && crossVec.y < 0)
+        {
+            isPulling = false;
+            Run(); /*Debug.Log("WALK");*/ isWait = false;
+        }
+        else
+        {
+
+            AnimDogAC.speed = 1;
             isPulling = false;
             if (!isWait)
             {
@@ -69,16 +83,6 @@ public class moveDog : MonoBehaviour
                 this.Invoke("Idle", 0.8f);
                 //Idle();
             }
-        }
-        else if (GetComponent<Chase>().dogState == 1)//(playerSp <= 0.5 && !walk) 
-        {
-            isPulling = false;
-            Walk(); /*Debug.Log("WALK");*/ isWait = false;
-        }
-        else if (GetComponent<Chase>().dogState == 2)
-        {
-            isPulling = false;
-            Run(); /*Debug.Log("WALK");*/ isWait = false;
         }
     }
     private void LateUpdate()
@@ -124,7 +128,6 @@ public class moveDog : MonoBehaviour
     {
         this.CancelInvoke();
         sit = false; run = false; walk = true; idle = false;
-        AnimDogAC.speed = playerSp;
         AnimDogAC.SetBool("sit", sit); AnimDogAC.SetBool("run", run); AnimDogAC.SetBool("walk", walk); AnimDogAC.SetBool("idle", idle); AnimDogAC.SetBool("pull", isPulling); AnimDogAC.SetBool("bark", false);
         //Debug.Log("WALK");
         this.Invoke("ChangeState", changeTime + Random.Range(0, 9) - 4);
@@ -133,7 +136,6 @@ public class moveDog : MonoBehaviour
     {
         this.CancelInvoke();
         sit = true; run = false; walk = false; idle = false;
-        AnimDogAC.speed = 1;
         AnimDogAC.SetBool("sit", sit); AnimDogAC.SetBool("run", run); AnimDogAC.SetBool("walk", walk); AnimDogAC.SetBool("idle", idle); AnimDogAC.SetBool("pull", isPulling) ; AnimDogAC.SetBool("bark", false);
         //Debug.Log("SIT");
         this.Invoke("ChangeState", changeTime + Random.Range(0, 9) - 4);
