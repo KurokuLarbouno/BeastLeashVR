@@ -86,11 +86,10 @@ public class StageManerger : MonoBehaviour
                     Debug.Log("StageThree");
                     Dog.GetComponent<FormalDog>().dogState = 3;//原地
                     Bark();
-                    Duck.GetComponent<Duck>().State = 1;//發光
+                    Duck.GetComponent<Duck>().State = 1;//啟動鴨
                     isInit = true;
                     break;
                 case 4:
-                    Dog.GetComponent<AudioSource>().Stop();
                     break;
                 default:
                     break;
@@ -114,6 +113,7 @@ public class StageManerger : MonoBehaviour
     public void StageThereEnded() //狗因鴨靠人
     {
         Debug.Log("StageThereEnded");
+        Dog.GetComponent<AudioSource>().Stop();
         stageState = 4;
         isInit = false;
         VirtualDog.GetComponent<moveDog>().StopBark();

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Point4 : MonoBehaviour
+public class PointTmp : MonoBehaviour
 {
     public bool isArrived = false;
-    private float stayTm = 0.0f, treshold = 5.0f;
+    private float stayTm = 0.0f, treshold = 0.3f;
     private bool isChecking = false;
     private void Start()
     {

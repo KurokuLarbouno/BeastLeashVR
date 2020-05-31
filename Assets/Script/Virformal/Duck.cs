@@ -29,12 +29,21 @@ public class Duck : MonoBehaviour
     }
     public void quack()
     {
+        if (State == 1)
+        {
+            GetComponent<Interactable>().enabled = true;
+            State = 2;
+        }
         if (interactable.attachedToHand)
         {
             duckAS.Play();
             if (STM.stageState == 3)
             {
                 STM.StageThereEnded();
+                transform.tag = "Target";
+            }
+            else if (STM.stageState == 4)
+            {
                 transform.tag = "Target";
             }
         }

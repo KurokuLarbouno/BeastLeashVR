@@ -40,7 +40,7 @@ public class controller : MonoBehaviour
     }
     private void TrigerUp()
     {
-        Target.GetComponent<Duck>().quack();
+        //Target.GetComponent<Duck>().quack();
         //if (Target != null) 
         //{
         //    if (Target.transform.gameObject.tag == "Untagged") Target.transform.gameObject.tag = "Flag";
@@ -49,11 +49,15 @@ public class controller : MonoBehaviour
     }
     private void TrigerDown()
     {
-        //Target.GetComponent<Duck>().quack();
+        if (Target.GetComponent<Duck>().State > 0)
+        {
+            Target.GetComponent<Duck>().quack();
+        }
         //if (Target != null)
         //{
         //    if (Target.transform.gameObject.tag == "Flag") Target.transform.gameObject.tag = "Untagged";
         //    if (Target.transform.gameObject.tag == "Target") Target.transform.gameObject.tag = "Untagged";
         //}
     }
+    
 }

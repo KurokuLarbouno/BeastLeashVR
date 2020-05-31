@@ -49,17 +49,36 @@ public class moveDog : MonoBehaviour
         //govec * forward y < 0
         Vector3 crossVec = Vector3.Cross(goVec, transform.forward);
         //Debug.Log(crossVec.y);
-        if (crossVec.y > 0.01f) isFallback = true;
+        if (crossVec.y > 0.01f && playerSp > 0.3f) isFallback = true;
         else isFallback = false;
 
         dogPos = curVec;
         oldVec = goVec;
 
         //更新動畫
-        if (isFallback)
+        if (isbarking)
+        {
+            Quaternion lookRot = Quaternion.LookRotation(Cat.transform.position - transform.position);
+            Vector3 lookElr = lookRot.eulerAngles;
+            transform.rotation = Quaternion.Euler(0.0f, lookElr.y, lookElr.z);
+            string nowAnim = AnimDogAC.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            if (nowAnim == "BeagleIdleBarking")
+            {
+                AnimDogAC.SetBool("bark", false);
+                isbarking = false;
+                sit = false; run = false; walk = false; idle = false;
+            }
+            else
+            {
+                sit = false; run = false; walk = false; idle = false;
+                AnimDogAC.SetBool("bark", true);
+            }
+
+        }
+        else if (isFallback)
         {
             AnimDogAC.speed = 1;
-            if (playerSp > 0.2f) Pull();
+            Pull();
         }
         else if (GetComponent<Chase>().dogState == 1 && crossVec.y < 0) 
         {
@@ -87,32 +106,12 @@ public class moveDog : MonoBehaviour
     }
     private void LateUpdate()
     {
-        if (goVec.magnitude > 0.1f)
-        {
-            Quaternion convertRot = Quaternion.LookRotation(goVec);
-            convertRot *= Quaternion.Euler(0, -90, -180 - 8.12f);
-            //DogChestNd.transform.rotation = convertRot;//Quaternion.Lerp(DogChestNd.transform.rotation, convertRot, ttt);
-        }
-        if (isbarking)
-        {
-            Quaternion lookRot = Quaternion.LookRotation(Cat.transform.position - transform.position);
-            Vector3 lookElr = lookRot.eulerAngles;
-            transform.rotation = Quaternion.Euler(0.0f, lookElr.y, lookElr.z);
-            string nowAnim = AnimDogAC.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-            if (nowAnim == "BeagleIdleBarking")
-            {
-                AnimDogAC.SetBool("bark", false);
-                isbarking = false;
-                sit = false; run = false; walk = false; idle = false;
-            }
-            else
-            {
-                sit = false; run = false; walk = false; idle = false;
-                AnimDogAC.SetBool("bark", true);
-            }
-                
-        }
-
+        //if (goVec.magnitude > 0.1f)
+        //{
+        //    Quaternion convertRot = Quaternion.LookRotation(goVec);
+        //    convertRot *= Quaternion.Euler(0, -90, -180 - 8.12f);
+        //    //DogChestNd.transform.rotation = convertRot;//Quaternion.Lerp(DogChestNd.transform.rotation, convertRot, ttt);
+        //}
     }
     public void Idle()
     {
