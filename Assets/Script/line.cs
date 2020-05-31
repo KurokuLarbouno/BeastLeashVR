@@ -12,7 +12,7 @@ public class line : MonoBehaviour
     private int index = 0;
     //端点数
     private int LengthOfLineRenderer = 0;
-    private GameObject dog, rope;
+    public GameObject dog, rope;
     void Start()
     {
         ////添加LineRenderer组件
@@ -23,8 +23,8 @@ public class line : MonoBehaviour
         //lineRenderer.SetColors(Color.red, Color.yellow);
         ////设置宽度
         //lineRenderer.SetWidth(0.02f, 0.02f);
-        dog = GameObject.FindWithTag("Dog");
-        rope = GameObject.FindWithTag("Rope");
+        //dog = GameObject.FindWithTag("Dog");
+        //rope = GameObject.FindWithTag("Rope");
         //Debug.Log(dog);
         lineRenderer = GetComponent<LineRenderer>();
         //Debug.Log(lineRenderer);

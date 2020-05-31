@@ -19,7 +19,7 @@ public class FormalDog : MonoBehaviour
     private int carSp = 1;
     private bool isTimerSet = false;
     //繩子
-    private float leashLength = 1;
+    public float leashLength = 1;
     private bool initRope = false;
     //碰牆事件
     private float wallOffset = 1.0f;    //宣告距離
@@ -28,10 +28,10 @@ public class FormalDog : MonoBehaviour
     private int sendMassage = 0;
     //walk mode
     private int walkMode = 2;//1: 朝target位置, 2:隨機, 3:不須改向, 4:等玩家給繩, 5:拉扯
-    private int walkAngle = 0, walkMdTm = 1, walkSp = 0, waitTm = 2;
+    private int walkAngle = 0, walkMdTm = 1, walkSp = 2, waitTm = 2;
     //run mode
-    private int runSp = 2;
-    private bool isFallback = false;
+    private int runSp = 4;
+    public bool isFallback = false;
     //stay mode
 
     // Start is called before the first frame update
@@ -39,7 +39,7 @@ public class FormalDog : MonoBehaviour
     {
         //Target = GameObject.Find("RoadFinder");
         Tracker = GameObject.FindWithTag("Tracker");
-        Debug.Log(Tracker.name);
+        //Debug.Log(Tracker.name);
         Rope = GameObject.FindWithTag("Rope");
         //Serial
         sp.Open();
@@ -87,13 +87,13 @@ public class FormalDog : MonoBehaviour
                 ropePos = new Vector3(ropePos.x, 0, ropePos.z);
                 Vector3 ropeVec = carPos - ropePos;
                 //Debug.Log("Rope" + ropeVec.magnitude);
-                if (initRope)
-                {
-                    //leashLength = ropeVec.magnitude;
-                    leashLength = 1.0f;
-                    initRope = true;
-                    Debug.Log("Leash length: " + leashLength);
-                }
+                //if (initRope)
+                //{
+                //    //leashLength = ropeVec.magnitude;
+                //    leashLength = 1.0f;
+                //    initRope = true;
+                //    Debug.Log("Leash length: " + leashLength);
+                //}
 
                 if (goVec.magnitude > 0.4f && Target.transform.gameObject.tag == "Target")
                 {
@@ -119,12 +119,12 @@ public class FormalDog : MonoBehaviour
                     Vector3 physicVec;
                     physicVec = transform.position - carPos;
                     physicVec.Normalize();
-                    if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05))
-                    {
-                        isFallback = true;
-                        Debug.Log("formal fallback");
-                    }
-                    else isFallback = false;
+                    //if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05))
+                    //{
+                    //    isFallback = true;
+                    //    Debug.Log("formal fallback");
+                    //}
+                    //else isFallback = false;
                     //預設方向及速度
                     float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
                     int outSp = carSp;
@@ -148,7 +148,7 @@ public class FormalDog : MonoBehaviour
                             }
                             else
                             {
-                                this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1) - 2);
+                                //this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1) - 2);
                                 walkMode = 4;
                             }
                         }
@@ -246,7 +246,7 @@ public class FormalDog : MonoBehaviour
     }
     private void waitPull()//走路等待主人
     {
-        Debug.Log("wait for u!!!" + walkMode);
+        //Debug.Log("wait for u!!!" + walkMode);
         
         if (walkMode == 4)
         {

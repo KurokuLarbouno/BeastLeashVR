@@ -156,7 +156,7 @@ public class moveDog : MonoBehaviour
         AnimDogAC.SetBool("sit", sit); AnimDogAC.SetBool("run", run); AnimDogAC.SetBool("walk", walk); AnimDogAC.SetBool("idle", idle); AnimDogAC.SetBool("bark", false);
         AnimDogAC.SetBool("pull", true);
         isPulling = true;
-        Debug.Log("Anim fallback");
+        //Debug.Log("Anim fallback");
     }
     public void Bark(Transform obj)
     {

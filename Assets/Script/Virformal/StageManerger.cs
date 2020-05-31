@@ -30,7 +30,7 @@ using UnityEngine;
 public class StageManerger : MonoBehaviour
 {
     public int stageState = 0;
-    public GameObject Plyer, CheckPoint, Dog, Cat, Ball, Duck;
+    public GameObject Plyer, CheckPoint, Dog, VirtualDog, Cat, Ball, Duck;
     public bool isInit = false, isCatLooked = false, isCatLeaved = false;
     void Start()
     {
@@ -78,7 +78,7 @@ public class StageManerger : MonoBehaviour
                         CheckPoint.GetComponent<CheckPoint>().State = 2;//狗向前衝
                         CheckPoint.GetComponent<CheckPoint>().isAsigned = false;
                         Dog.GetComponent<FormalDog>().dogState = 2;//衝
-                        Dog.GetComponent<moveDog>().StopBark();
+                        VirtualDog.GetComponent<moveDog>().StopBark();
                     }
                     isInit = true;
                     break;
@@ -116,7 +116,7 @@ public class StageManerger : MonoBehaviour
         Debug.Log("StageThereEnded");
         stageState = 4;
         isInit = false;
-        Dog.GetComponent<moveDog>().StopBark();
+        VirtualDog.GetComponent<moveDog>().StopBark();
     }
     public void CatLooked()
     {
@@ -125,8 +125,8 @@ public class StageManerger : MonoBehaviour
     public void CatLeaved()
     {
         isCatLeaved = true; isInit = false;
-        Dog.GetComponent<moveDog>().Run();
-        Dog.GetComponent<moveDog>().isbarking = false;
+        VirtualDog.GetComponent<moveDog>().Run();
+        VirtualDog.GetComponent<moveDog>().isbarking = false;
     }
     private void OnTriggerEnter(Collider col)
     {
@@ -140,6 +140,6 @@ public class StageManerger : MonoBehaviour
     }
     private void Bark()
     {
-        Dog.GetComponent<moveDog>().Bark(Cat.transform);
+        VirtualDog.GetComponent<moveDog>().Bark(Cat.transform);
     }
 }

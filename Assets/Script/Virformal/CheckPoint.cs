@@ -16,7 +16,7 @@ public class CheckPoint : MonoBehaviour
         int i = 0;
         foreach (Transform item in points)
         {
-            if (i != 0 && i != 5)
+            if (i != 0 && i != 6)
             {
                 points[i].gameObject.SetActive(false);
             }
@@ -41,12 +41,14 @@ public class CheckPoint : MonoBehaviour
                     else if (!points[3].GetComponent<Point>().isArrived)
                     { points[2].gameObject.SetActive(false); points[2].gameObject.tag = "Untagged"; points[3].gameObject.SetActive(true); checkPoint = 3; }
                     else if (!points[4].GetComponent<Point>().isArrived)
-                    { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; StageOneEnd(); }
+                    { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; points[4].gameObject.SetActive(true); checkPoint = 4; }
+                    else if (!points[4].GetComponent<Point>().isArrived)
+                    { points[4].gameObject.SetActive(false); points[4].gameObject.tag = "Untagged"; StageOneEnd(); }
                     isAsigned = true;
                     break;
                 case 2:
-                    if (!points[4].GetComponent<Point4>().isArrived) { points[4].gameObject.SetActive(true); checkPoint = 4; }
-                    if (points[4].GetComponent<Point4>().isArrived) {points[4].tag = "Untagged";points[4].gameObject.SetActive(false); checkPoint = 0; StageTwoEnd(); }
+                    if (!points[5].GetComponent<Point4>().isArrived) { points[5].gameObject.SetActive(true); checkPoint = 5; }
+                    if (points[5].GetComponent<Point4>().isArrived) {points[5].tag = "Untagged";points[5].gameObject.SetActive(false); checkPoint = 0; StageTwoEnd(); }
                     isAsigned = true;
                     State = 3;
                     break;
@@ -56,7 +58,7 @@ public class CheckPoint : MonoBehaviour
                     break;
             }
         }
-        else if (checkPoint == 4)
+        else if (checkPoint == 5)
         {
             if (points[checkPoint].GetComponent<Point4>().isArrived)
             {

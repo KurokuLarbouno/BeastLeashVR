@@ -34,7 +34,7 @@ public class Chase : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Target = GameObject.Find("RoadFinder");
+        Target = GameObject.Find("carDog");
         //Debug.Log(this.name);
         Rope = GameObject.FindWithTag("Rope");
     }
@@ -43,126 +43,100 @@ public class Chase : MonoBehaviour
     void FixedUpdate()
     {
         //車子定位
-        Vector3 trackPos = this.transform.position;
-        Quaternion trackRot = this.transform.rotation;
-        trackRot *= Quaternion.Euler(90, 0, 0);
-        carPos = new Vector3(trackPos.x, 0.06f, trackPos.z);
-        transform.position = carPos;
-        transform.rotation = new Quaternion(0, trackRot.y, 0, trackRot.w);
+        //Vector3 trackPos = transform.position;
+        //Quaternion trackRot = Target.transform.rotation;
+        //trackRot *= Quaternion.Euler(90, 0, 0);
+        //transform.position = Target.transform.position;
+        //transform.rotation = Target.transform.rotation;
         if (Target != null)
         {
-            if (Target.transform.gameObject.tag == "Untagged")
+
+            //虛擬狗去追車狗，旋轉/dogstate 複製cardog的formal dog
+            //
+            tarPos = Target.transform.position;
+            tarPos = new Vector3(tarPos.x, 0.06f, tarPos.z);
+            Vector3 goVec = tarPos - carPos;
+        //Debug.Log(goVec.magnitude);
+        //繩子方向
+            ropePos = Rope.transform.position;
+            ropePos = new Vector3(ropePos.x, 0, ropePos.z);
+            Vector3 ropeVec = carPos - ropePos;
+            carPos = transform.position;
+            //Debug.Log("Rope" + ropeVec.magnitude);
+            //if (initRope)
+            //{
+            //    //leashLength = ropeVec.magnitude;
+            //    leashLength = 1.0f;
+            //    initRope = true;
+            //    Debug.Log("Leash length: " + leashLength);
+            //}
+
+            if (goVec.magnitude > 0.2f)
             {
-                Target = null;
-                //Debug.Log("untag");
+                goVec.Normalize();
+
+                if (goVec.magnitude > 0.6f && goVec.magnitude > 1.0f)  //距離1.0~0.6時，會先以反方向繞出一點轉進去
+                    goVec = Vector3.Lerp(-Target.transform.forward, goVec, (goVec.magnitude - 0.6f) / 0.4f * 0.3f);
+
+                //拉扯檢查
+                Vector3 physicVec;
+                physicVec = transform.position - carPos;
+                physicVec.Normalize();
+                //if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05))
+                //{
+                //    isFallback = true;
+                //    Debug.Log("formal fallback");
+                //}
+                //else isFallback = false;
+                //預設方向及速度
+
+                float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
+                int outSp = carSp;
+
+                //各狀態微調
+                if (dogState == 1)//1:walk
+                {
+                    if (ropeVec.magnitude > (leashLength - 0.1))
+                    {
+                        outSp = 0;
+                    }
+                }
+                else if (dogState == 2)//2:rush
+                {
+                    //如果狗後退，先切walk
+                    carSp = runSp;
+                    //Debug.Log("RUN!");
+                    //if (isFallback) { dogState = 1; }
+                }
+                else if (dogState == 3)//3:stay
+                {
+                    if (Target.name == "Duck")
+                    {
+                        dogState = 1;
+                    }
+                    if (goVec.magnitude > 0.1f)
+                    {
+                        carSp *= (int)(goVec.magnitude / 0.2f);
+                        carSp += 2;
+                        carSp %= 10;
+                    }
+                }
+                Quaternion lookRot = Quaternion.LookRotation(goVec);
+                Vector3 lookElr = lookRot.eulerAngles;
+                lookElr = new Vector3(0.0f, lookElr.y, lookElr.z);
+                if (!isFallback) transform.Translate(Vector3.forward * carSp * Time.deltaTime);
+                transform.rotation = Quaternion.Euler(lookElr);
             }
             else
             {
-                //車子面向
-                trackPos = transform.forward;
-                carFace = new Vector3(trackPos.x, 0, trackPos.z);
-                carFace.Normalize();
-                //目標方向
-                tarPos = Target.transform.position;
-                tarPos = new Vector3(tarPos.x, 0, tarPos.z);
-                Vector3 goVec = tarPos - carPos;
-                //Debug.Log(goVec.magnitude);
-                //繩子方向
-                ropePos = Rope.transform.position;
-                ropePos = new Vector3(ropePos.x, 0, ropePos.z);
-                Vector3 ropeVec = carPos - ropePos;
-                //Debug.Log("Rope" + ropeVec.magnitude);
-                if (initRope)
-                {
-                    //leashLength = ropeVec.magnitude;
-                    leashLength = 1.0f;
-                    initRope = true;
-                    Debug.Log("Leash length: " + leashLength);
-                }
-
-                if (goVec.magnitude > 0.4f && Target.transform.gameObject.tag == "Target")
-                {
-                    goVec.Normalize();
-
-                    if (goVec.magnitude > 0.6f && goVec.magnitude > 1.0f)  //距離1.0~0.6時，會先以反方向繞出一點轉進去
-                        goVec = Vector3.Lerp(-Target.transform.forward, goVec, (goVec.magnitude - 0.6f) / 0.4f * 0.3f);
-
-                    //拉扯檢查
-                    Vector3 physicVec;
-                    physicVec = transform.position - carPos;
-                    physicVec.Normalize();
-                    //if ((physicVec + goVec).magnitude < (goVec.magnitude - 0.05))
-                    //{
-                    //    isFallback = true;
-                    //    Debug.Log("formal fallback");
-                    //}
-                    //else isFallback = false;
-                    //預設方向及速度
-
-                    float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
-                    int outSp = carSp;
-
-                    //各狀態微調
-                    if (dogState == 1)//1:walk
-                    {
-                        if (ropeVec.magnitude > (leashLength - 0.1))
-                        {
-                            outSp = 0;
-                        }
-                        //繩夠長:1之內隨機走
-                        //繩不夠:一秒拉一下
-                        //if (ropeVec.magnitude > (leashLength - 0.3))
-                        //{
-                        //    if (walkMode == 4)
-                        //    {
-                        //        outSp = 0;
-                        //    }
-                        //    else if (walkMode == 5)
-                        //    {
-                        //        //outSp = carSp;//保持原狀
-                        //        walkSp = UnityEngine.Random.Range(0, 1);
-                        //        outSp += walkSp;
-                        //    }
-                        //    else
-                        //    {
-                        //        this.Invoke("waitPull", waitTm + UnityEngine.Random.Range(0, 1) - 2);
-                        //        walkMode = 4;
-                        //    }
-                        //}
-
-                    }
-                    else if (dogState == 2)//2:rush
-                    {
-                        //如果狗後退，先切walk
-                        carSp = runSp;
-                        //Debug.Log("RUN!");
-                        //if (isFallback) { dogState = 1; }
-                    }
-                    else if (dogState == 3)//3:stay
-                    {
-                        if (Target.name == "Duck")
-                        {
-                            dogState = 1;
-                        }
-                        if (goVec.magnitude > 0.1f)
-                        {
-                            carSp *= (int)(goVec.magnitude / 0.2f);
-                            carSp += 2;
-                            carSp %= 10;
-                        }
-                    }
-                    Quaternion lookRot = Quaternion.LookRotation(goVec);
-                    Vector3 lookElr = lookRot.eulerAngles;
-                    if (!isFallback) transform.Translate(Vector3.forward * carSp * Time.deltaTime);
-                    transform.rotation = Quaternion.Euler(0.0f, lookElr.y, lookElr.z);
-                }
-                carPos = transform.position;
+                Vector3 dogDot = Vector3.Lerp(Target.transform.rotation.eulerAngles, transform.rotation.eulerAngles, 0.7f);
+                transform.rotation = Quaternion.Euler(dogDot);
+                dogDot = Vector3.Lerp(Target.transform.position, transform.position, 0.7f);
+                transform.position = dogDot;
             }
-
         }
         else
         {
-            Target = GameObject.FindWithTag("Target");
             //Debug.Log(Target.transform.name);
             sendMassage = 100000;
         }
