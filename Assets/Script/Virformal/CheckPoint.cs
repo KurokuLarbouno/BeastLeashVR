@@ -38,12 +38,12 @@ public class CheckPoint : MonoBehaviour
                     { points[1].gameObject.SetActive(true); checkPoint = 1; }
                     else if (!points[2].GetComponent<Point>().isArrived)
                     { points[1].gameObject.SetActive(false); points[1].gameObject.tag = "Untagged"; points[2].gameObject.SetActive(true); checkPoint = 2; }
-                    else if (!points[3].GetComponent<Point>().isArrived)
+                    else if (!points[3].GetComponent<PointTmp>().isArrived)
                     { points[2].gameObject.SetActive(false); points[2].gameObject.tag = "Untagged"; points[3].gameObject.SetActive(true); checkPoint = 3; }
                     else if (!points[4].GetComponent<Point>().isArrived)
                     { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; points[4].gameObject.SetActive(true); checkPoint = 4; }
                     else if (points[4].GetComponent<Point>().isArrived)
-                    { points[4].gameObject.SetActive(false); points[4].gameObject.tag = "Untagged"; StageOneEnd(); }
+                    { points[4].gameObject.SetActive(false); points[4].gameObject.tag = "Untagged"; checkPoint = 5; StageOneEnd(); }
                     isAsigned = true;
                     break;
                 case 2:
@@ -56,6 +56,13 @@ public class CheckPoint : MonoBehaviour
                     break;
                 default:
                     break;
+            }
+        }
+        else if (checkPoint == 3)
+        {
+            if (points[checkPoint].GetComponent<PointTmp>().isArrived)
+            {
+                isAsigned = false;
             }
         }
         else if (checkPoint == 5)

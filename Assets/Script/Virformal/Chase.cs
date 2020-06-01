@@ -42,6 +42,8 @@ public class Chase : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        //同步cardog
+        dogState = Target.GetComponent<FormalDog>().dogState;
         //車子定位
         //Vector3 trackPos = transform.position;
         //Quaternion trackRot = Target.transform.rotation;
@@ -100,6 +102,11 @@ public class Chase : MonoBehaviour
                     {
                         outSp = 0;
                     }
+                    Quaternion lookRot = Quaternion.LookRotation(goVec);
+                    Vector3 lookElr = lookRot.eulerAngles;
+                    lookElr = new Vector3(0.0f, lookElr.y, lookElr.z);
+                    if (!isFallback) transform.Translate(Vector3.forward * carSp * Time.deltaTime);
+                    transform.rotation = Quaternion.Euler(lookElr);
                 }
                 else if (dogState == 2)//2:rush
                 {
@@ -107,25 +114,19 @@ public class Chase : MonoBehaviour
                     carSp = runSp;
                     //Debug.Log("RUN!");
                     //if (isFallback) { dogState = 1; }
+                    Quaternion lookRot = Quaternion.LookRotation(goVec);
+                    Vector3 lookElr = lookRot.eulerAngles;
+                    lookElr = new Vector3(0.0f, lookElr.y, lookElr.z);
+                    if (!isFallback) transform.Translate(Vector3.forward * carSp * Time.deltaTime);
+                    transform.rotation = Quaternion.Euler(lookElr);
                 }
                 else if (dogState == 3)//3:stay
                 {
-                    if (Target.name == "Duck")
-                    {
-                        dogState = 1;
-                    }
-                    if (goVec.magnitude > 0.1f)
-                    {
-                        carSp *= (int)(goVec.magnitude / 0.2f);
-                        carSp += 2;
-                        carSp %= 10;
-                    }
+                    Vector3 dogDot = Vector3.Lerp(Target.transform.rotation.eulerAngles, transform.rotation.eulerAngles, 0.7f);
+                    transform.rotation = Quaternion.Euler(dogDot);
+                    dogDot = Vector3.Lerp(Target.transform.position, transform.position, 0.7f);
+                    transform.position = dogDot;
                 }
-                Quaternion lookRot = Quaternion.LookRotation(goVec);
-                Vector3 lookElr = lookRot.eulerAngles;
-                lookElr = new Vector3(0.0f, lookElr.y, lookElr.z);
-                if (!isFallback) transform.Translate(Vector3.forward * carSp * Time.deltaTime);
-                transform.rotation = Quaternion.Euler(lookElr);
             }
             else
             {
@@ -134,11 +135,6 @@ public class Chase : MonoBehaviour
                 dogDot = Vector3.Lerp(Target.transform.position, transform.position, 0.7f);
                 transform.position = dogDot;
             }
-        }
-        else
-        {
-            //Debug.Log(Target.transform.name);
-            sendMassage = 100000;
         }
     }
 

@@ -49,8 +49,8 @@ public class moveDog : MonoBehaviour
         //govec * forward y < 0
         Vector3 crossVec = Vector3.Cross(goVec, transform.forward);
         //Debug.Log(crossVec.y);
-        if (crossVec.y > 0.01f && playerSp > 0.3f) isFallback = true;
-        else isFallback = false;
+        //if (crossVec.y > 0.01f && playerSp > 0.25f) isFallback = true;
+        //else isFallback = false;
 
         dogPos = curVec;
         oldVec = goVec;
@@ -58,6 +58,8 @@ public class moveDog : MonoBehaviour
         //更新動畫
         if (isbarking)
         {
+            //朝貓
+
             Quaternion lookRot = Quaternion.LookRotation(Cat.transform.position - transform.position);
             Vector3 lookElr = lookRot.eulerAngles;
             transform.rotation = Quaternion.Euler(0.0f, lookElr.y, lookElr.z);
@@ -65,7 +67,6 @@ public class moveDog : MonoBehaviour
             if (nowAnim == "BeagleIdleBarking")
             {
                 AnimDogAC.SetBool("bark", false);
-                isbarking = false;
                 sit = false; run = false; walk = false; idle = false;
             }
             else
@@ -75,27 +76,24 @@ public class moveDog : MonoBehaviour
             }
 
         }
-        else if (isFallback)
+        else if (isPulling)
         {
             AnimDogAC.speed = 1;
             Pull();
         }
-        else if (GetComponent<Chase>().dogState == 1 && crossVec.y < 0) 
+        else if (GetComponent<Chase>().dogState == 1 && crossVec.y < 0 && playerSp > 0.2f) 
         {
             AnimDogAC.speed = playerSp;
-            isPulling = false;
             Walk(); /*Debug.Log("WALK");*/ isWait = false;
         }
         else if (GetComponent<Chase>().dogState == 2 && crossVec.y < 0)
         {
-            isPulling = false;
-            Run(); /*Debug.Log("WALK");*/ isWait = false;
+            Run(); isWait = false;
         }
         else
         {
 
             AnimDogAC.speed = 1;
-            isPulling = false;
             if (!isWait)
             {
                 isWait = true;
@@ -157,11 +155,11 @@ public class moveDog : MonoBehaviour
         isPulling = true;
         //Debug.Log("Anim fallback");
     }
-    public void Bark(Transform obj)
+    public void Bark(GameObject obj)
     {
         this.CancelInvoke();
         //Debug.Log("Bark At " + obj);
-        Cat = obj.gameObject;
+        Cat = obj;
         sit = false; run = false; walk = false; idle = false;
         AnimDogAC.SetBool("sit", sit); AnimDogAC.SetBool("run", run); AnimDogAC.SetBool("walk", walk); AnimDogAC.SetBool("idle", idle); AnimDogAC.SetBool("pull", isPulling);
         AnimDogAC.SetBool("bark", true);
@@ -199,5 +197,10 @@ public class moveDog : MonoBehaviour
             this.Invoke("ChangeState", changeTime + Random.Range(0, 9) - 4);
             AnimDogAC.SetInteger("sitState", sitState);
         }
+    }
+    public void StopPull()
+    {
+        isPulling = false;
+        if(!isbarking) Walk();
     }
 }

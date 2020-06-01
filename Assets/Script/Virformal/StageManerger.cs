@@ -63,7 +63,7 @@ public class StageManerger : MonoBehaviour
                         Debug.Log("Stagetwo");
                         Cat.GetComponent<Cat>().State = 1; //Meow
                         Cat.SetActive(true);
-                        Debug.Log(Cat);
+                        //Debug.Log(Cat);
                         //Invoke -> Dog.GetComponent<Dog>().Bark(Cat.transform.position);//一段時間後對貓叫
                         this.Invoke("Bark", 5.0f);
                     }
@@ -90,6 +90,8 @@ public class StageManerger : MonoBehaviour
                     isInit = true;
                     break;
                 case 4:
+                    Dog.GetComponent<FormalDog>().dogState = 1;
+                    isInit = true;
                     break;
                 default:
                     break;
@@ -140,6 +142,6 @@ public class StageManerger : MonoBehaviour
     }
     private void Bark()
     {
-        VirtualDog.GetComponent<moveDog>().Bark(Cat.transform);
+        VirtualDog.GetComponent<moveDog>().Bark(Cat);
     }
 }

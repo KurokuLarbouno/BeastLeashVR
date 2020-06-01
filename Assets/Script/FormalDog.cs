@@ -28,10 +28,11 @@ public class FormalDog : MonoBehaviour
     private int sendMassage = 0;
     //walk mode
     private int walkMode = 2;//1: 朝target位置, 2:隨機, 3:不須改向, 4:等玩家給繩, 5:拉扯
-    private int walkAngle = 0, walkMdTm = 1, walkSp = 2, waitTm = 2;
+    private int walkAngle = 0, walkMdTm = 1, waitTm = 2;
+    public int walkSp = 2;
     //run mode
-    private int runSp = 4;
     public bool isFallback = false;
+    public int runSp = 5;
     //stay mode
 
     // Start is called before the first frame update
@@ -127,7 +128,7 @@ public class FormalDog : MonoBehaviour
                     //else isFallback = false;
                     //預設方向及速度
                     float angle = Vector3.SignedAngle(goVec, carFace, Vector3.up);
-                    int outSp = carSp;
+                    int outSp = walkSp;
                     angle *= 1.7f;
                     //各狀態微調
                     if (dogState == 1)//1:walk
@@ -159,7 +160,7 @@ public class FormalDog : MonoBehaviour
                         //如果狗後退，先切walk
                         carSp = runSp;
                         //Debug.Log("RUN!");
-                        if (isFallback) { dogState = 1; }
+                        //if (ropeVec.magnitude > (leashLength - 0.3)) { outSp = 1; dogState = 1; }
                     }
                     else if (dogState == 3)//3:stay
                     {
@@ -167,11 +168,11 @@ public class FormalDog : MonoBehaviour
                         {
                             dogState = 1;
                         }
-                        if(goVec.magnitude > 0.1f)
+                        if(goVec.magnitude > 0.2f)
                         {
-                            carSp *= (int)(goVec.magnitude / 0.2f);
-                            carSp += 2;
-                            carSp %= 10;
+                            outSp *= (int)(goVec.magnitude / 0.2f);
+                            outSp += 2;
+                            outSp %= 10;
                         }
                     }
 
