@@ -98,7 +98,12 @@ public class moveDog : MonoBehaviour
             {
                 isWait = true;
                 this.Invoke("Idle", 0.8f);
-                //Idle();
+                //Idle();                
+            }
+            string nowAnim = AnimDogAC.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            if (nowAnim == "DogPull")
+            {
+                Idle();
             }
         }
     }
@@ -171,7 +176,7 @@ public class moveDog : MonoBehaviour
         AnimDogAC.SetBool("bark", false);
         dogAS.Stop();
         isbarking = false;
-        Idle();
+        Run();
     }
     private void ChangeState()
     {
@@ -201,6 +206,8 @@ public class moveDog : MonoBehaviour
     public void StopPull()
     {
         isPulling = false;
-        if(!isbarking) Walk();
+
+        AnimDogAC.SetBool("pull", false);
+        //if(!isbarking) Walk();
     }
 }

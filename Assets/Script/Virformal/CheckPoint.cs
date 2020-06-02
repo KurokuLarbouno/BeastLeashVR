@@ -16,7 +16,7 @@ public class CheckPoint : MonoBehaviour
         int i = 0;
         foreach (Transform item in points)
         {
-            if (i != 0 && i != 6)
+            if (i != 0 && i != 7)
             {
                 points[i].gameObject.SetActive(false);
             }
@@ -40,15 +40,17 @@ public class CheckPoint : MonoBehaviour
                     { points[1].gameObject.SetActive(false); points[1].gameObject.tag = "Untagged"; points[2].gameObject.SetActive(true); checkPoint = 2; }
                     else if (!points[3].GetComponent<PointTmp>().isArrived)
                     { points[2].gameObject.SetActive(false); points[2].gameObject.tag = "Untagged"; points[3].gameObject.SetActive(true); checkPoint = 3; }
-                    else if (!points[4].GetComponent<Point>().isArrived)
+                    else if (!points[4].GetComponent<PointTmp>().isArrived)
                     { points[3].gameObject.SetActive(false); points[3].gameObject.tag = "Untagged"; points[4].gameObject.SetActive(true); checkPoint = 4; }
-                    else if (points[4].GetComponent<Point>().isArrived)
-                    { points[4].gameObject.SetActive(false); points[4].gameObject.tag = "Untagged"; checkPoint = 5; StageOneEnd(); }
+                    else if (!points[5].GetComponent<Point>().isArrived)
+                    { points[4].gameObject.SetActive(false); points[4].gameObject.tag = "Untagged"; points[5].gameObject.SetActive(true); checkPoint = 5; }
+                    else if (points[5].GetComponent<Point>().isArrived)
+                    { points[5].gameObject.SetActive(false); points[5].gameObject.tag = "Untagged"; checkPoint = 6; StageOneEnd(); }
                     isAsigned = true;
                     break;
                 case 2:
-                    if (!points[5].GetComponent<Point4>().isArrived) { points[5].gameObject.SetActive(true); checkPoint = 5; }
-                    if (points[5].GetComponent<Point4>().isArrived) {points[5].tag = "Untagged";points[5].gameObject.SetActive(false); checkPoint = 0; StageTwoEnd(); }
+                    if (!points[6].GetComponent<Point4>().isArrived) { points[6].gameObject.SetActive(true); checkPoint = 6; }
+                    if (points[6].GetComponent<Point4>().isArrived) {/*points[5].tag = "Untagged";*/points[6].gameObject.SetActive(false); checkPoint = 0; StageTwoEnd(); }
                     isAsigned = true;
                     State = 3;
                     break;
@@ -58,14 +60,15 @@ public class CheckPoint : MonoBehaviour
                     break;
             }
         }
-        else if (checkPoint == 3)
+        else if (checkPoint == 3 || checkPoint == 4)
         {
             if (points[checkPoint].GetComponent<PointTmp>().isArrived)
             {
                 isAsigned = false;
+                Debug.Log(points[checkPoint].gameObject.name);
             }
         }
-        else if (checkPoint == 5)
+        else if (checkPoint == 6)
         {
             if (points[checkPoint].GetComponent<Point4>().isArrived)
             {

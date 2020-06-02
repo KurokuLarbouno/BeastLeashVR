@@ -63,9 +63,11 @@ public class StageManerger : MonoBehaviour
                         Debug.Log("Stagetwo");
                         Cat.GetComponent<Cat>().State = 1; //Meow
                         Cat.SetActive(true);
+                        Duck.SetActive(true);
                         //Debug.Log(Cat);
                         //Invoke -> Dog.GetComponent<Dog>().Bark(Cat.transform.position);//一段時間後對貓叫
                         this.Invoke("Bark", 5.0f);
+                        Duck.GetComponent<Duck>().State = 1;//啟動鴨
                     }
                     //人看到後，貓開始跑到窗戶                                   
                     if (isCatLooked)
@@ -86,7 +88,6 @@ public class StageManerger : MonoBehaviour
                     Debug.Log("StageThree");
                     Dog.GetComponent<FormalDog>().dogState = 3;//原地
                     Bark();
-                    Duck.GetComponent<Duck>().State = 1;//啟動鴨
                     isInit = true;
                     break;
                 case 4:
@@ -128,7 +129,7 @@ public class StageManerger : MonoBehaviour
     {
         isCatLeaved = true; isInit = false;
         VirtualDog.GetComponent<moveDog>().Run();
-        VirtualDog.GetComponent<moveDog>().isbarking = false;
+        VirtualDog.GetComponent<moveDog>().StopBark();
     }
     private void OnTriggerEnter(Collider col)
     {

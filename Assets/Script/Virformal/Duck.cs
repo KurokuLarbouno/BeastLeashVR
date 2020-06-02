@@ -12,12 +12,15 @@ public class Duck : MonoBehaviour
     public new SkinnedMeshRenderer renderer;
 
     public bool affectMaterial = true;
+    public GameObject Dog;
 
     public SteamVR_Action_Single gripSqueeze = SteamVR_Input.GetAction<SteamVR_Action_Single>("Squeeze");
 
     public int State = 0;
     private AudioSource duckAS;
     private StageManerger STM;
+    private bool tagFlag = false;
+    private Transform pinPos;
 
     void Start()
     {
@@ -26,12 +29,13 @@ public class Duck : MonoBehaviour
             interactable = GetComponent<Interactable>();
         duckAS = GetComponent<AudioSource>();
         STM = GameObject.FindGameObjectWithTag("StageManerger").GetComponent<StageManerger>();
+        gameObject.SetActive(false);
+        pinPos = transform;
     }
     public void quack()
     {
         if (State == 1)
         {
-            GetComponent<Interactable>().enabled = true;
             State = 2;
         }
         if (interactable.attachedToHand)
@@ -40,11 +44,13 @@ public class Duck : MonoBehaviour
             if (STM.stageState == 3)
             {
                 STM.StageThereEnded();
-                transform.tag = "Target";
+                tagFlag = true;
+                Dog.GetComponent<moveDog>().Bark(transform.gameObject);
             }
             else if (STM.stageState == 4)
             {
-                transform.tag = "Target";
+                tagFlag = true;
+                Dog.GetComponent<moveDog>().Bark(transform.gameObject);
             }
         }
 
@@ -54,6 +60,11 @@ public class Duck : MonoBehaviour
         if (other.name == "Dog")
         {
             transform.tag = "Untagged";
+        }
+        if (other.tag == "Floor" && tagFlag)
+        {
+            transform.tag = "Target";
+            Dog.GetComponent<moveDog>().StopBark();
         }
     }
 }

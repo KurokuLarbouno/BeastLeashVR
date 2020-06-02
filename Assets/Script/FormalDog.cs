@@ -158,9 +158,9 @@ public class FormalDog : MonoBehaviour
                     else if (dogState == 2)//2:rush
                     {
                         //如果狗後退，先切walk
-                        carSp = runSp;
+                        outSp = runSp;
                         //Debug.Log("RUN!");
-                        //if (ropeVec.magnitude > (leashLength - 0.3)) { outSp = 1; dogState = 1; }
+                        if (ropeVec.magnitude > leashLength + 0.1f) { outSp = 1; dogState = 1; }
                     }
                     else if (dogState == 3)//3:stay
                     {
@@ -173,6 +173,7 @@ public class FormalDog : MonoBehaviour
                             outSp *= (int)(goVec.magnitude / 0.2f);
                             outSp += 2;
                             outSp %= 10;
+                            if (outSp > 3) outSp = 3;
                         }
                     }
 

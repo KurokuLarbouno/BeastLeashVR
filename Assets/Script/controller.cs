@@ -15,7 +15,7 @@ public class controller : MonoBehaviour
     private Interactable m_CrrentInteractable = null;
     public  List<Interactable> m_CrrentInteractables = new List<Interactable>();
 
-    private GameObject Target;
+    public GameObject Target;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class controller : MonoBehaviour
 
     void Start()
     {
-        Target = GameObject.Find("Duck");
+        //Target = GameObject.Find("Duck");
     }
     void Update()
     {
