@@ -7,10 +7,11 @@ public class moveDog : MonoBehaviour
 {
 
     int dogState = 1;//1:walk, 2:rush, 3:stay
-    public bool isbarking = false, isPulling = false;
+    public bool isbarking = false, isPulling = false, isStare = false;
     private Animator AnimDogAC;
-    private GameObject Dogfab, Target, DogChestNd, DogHeadNd, MainCam, Cat, Dog;
-    private bool sit = false, run = false, walk = false, idle = false, isWait = true, isFallback = false;
+    public GameObject mPlayer, carDog;
+    private GameObject Dogfab, Target,MainCam, Cat;
+    private bool sit = false, run = false, walk = false, idle = false, isWait = true, isFallback = false, isStay = false;
     private int sitState = 0, runState = 0, walkState = 0, idleState = 0;
     private Vector3 dogPos, dogFace, goVec, oldVec;
     private float  runLength = 2.0f;
@@ -22,13 +23,6 @@ public class moveDog : MonoBehaviour
     void Start()
     {
         Dogfab = transform.GetChild(0).gameObject;
-        //DogChestNd = GameObject.FindWithTag("DogChestNd");
-        ////Debug.Log(DogChestNd);
-        //DogHeadNd = GameObject.FindWithTag("DogHeadNd");
-        ////Debug.Log(DogHeadNd);
-        //Target = GameObject.FindWithTag("Target");
-        //MainCam = GameObject.FindWithTag("MainCamera");
-        ////Debug.Log(MainCam);
         AnimDogAC = Dogfab.GetComponent<Animator>();
         dogAS = GetComponent<AudioSource>();
         Idle();
@@ -56,6 +50,7 @@ public class moveDog : MonoBehaviour
         oldVec = goVec;
 
         //更新動畫
+
         if (isbarking)
         {
             //朝貓
@@ -92,7 +87,6 @@ public class moveDog : MonoBehaviour
         }
         else
         {
-
             AnimDogAC.speed = 1;
             if (!isWait)
             {
@@ -109,12 +103,12 @@ public class moveDog : MonoBehaviour
     }
     private void LateUpdate()
     {
-        //if (goVec.magnitude > 0.1f)
-        //{
-        //    Quaternion convertRot = Quaternion.LookRotation(goVec);
-        //    convertRot *= Quaternion.Euler(0, -90, -180 - 8.12f);
-        //    //DogChestNd.transform.rotation = convertRot;//Quaternion.Lerp(DogChestNd.transform.rotation, convertRot, ttt);
-        //}
+        if (isStare == true)
+        {
+            Quaternion lookRot = Quaternion.LookRotation(mPlayer.transform.position - transform.position);
+            Vector3 lookElr = lookRot.eulerAngles;
+            transform.rotation = Quaternion.Euler(lookElr.x, lookElr.y, lookElr.z);
+        }
     }
     public void Idle()
     {
@@ -209,5 +203,28 @@ public class moveDog : MonoBehaviour
 
         AnimDogAC.SetBool("pull", false);
         //if(!isbarking) Walk();
+    }
+    public void Stare()
+    {
+        this.CancelInvoke();
+        //Debug.Log("Bark At " + obj);
+        sit = false; run = false; walk = false; idle = true; isPulling = false; isbarking = false;
+        AnimDogAC.SetBool("sit", sit); AnimDogAC.SetBool("run", run); AnimDogAC.SetBool("walk", walk); AnimDogAC.SetBool("idle", idle); AnimDogAC.SetBool("pull", isPulling);
+        AnimDogAC.SetBool("bark", isbarking);
+        isStare = true;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Point06")
+        {
+            carDog.GetComponent<FormalDog>().isStay = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name == "Point06")
+        {
+            carDog.GetComponent<FormalDog>().isStay = false;
+        }
     }
 }

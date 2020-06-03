@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /*
 一
@@ -115,6 +113,8 @@ public class StageManerger : MonoBehaviour
     }
     public void StageThereEnded() //狗因鴨靠人
     {
+        CheckPoint.GetComponent<CheckPoint>().State = 3;
+        CheckPoint.GetComponent<CheckPoint>().isAsigned = false;
         Debug.Log("StageThereEnded");
         Dog.GetComponent<AudioSource>().Stop();
         stageState = 4;

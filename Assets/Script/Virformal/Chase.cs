@@ -125,7 +125,7 @@ public class Chase : MonoBehaviour
                     Vector3 dogDot = Vector3.Lerp(Target.transform.rotation.eulerAngles, transform.rotation.eulerAngles, 0.7f);
                     transform.rotation = Quaternion.Euler(dogDot);
                     dogDot = Vector3.Lerp(Target.transform.position, transform.position, 0.7f);
-                    transform.position = dogDot;
+                    //transform.position = dogDot;
                 }
             }
             else

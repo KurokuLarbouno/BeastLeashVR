@@ -34,37 +34,36 @@ public class Duck : MonoBehaviour
     }
     public void quack()
     {
-        if (State == 1)
+        if (interactable.attachedToHand) //在手上的話拉插銷
         {
-            State = 2;
-        }
-        if (interactable.attachedToHand)
-        {
+            transform.tag = "Untagged";
             duckAS.Play();
             if (STM.stageState == 3)
             {
                 STM.StageThereEnded();
                 tagFlag = true;
-                Dog.GetComponent<moveDog>().Bark(transform.gameObject);
+                Dog.GetComponent<moveDog>().Stare();//狗靜止看人
             }
             else if (STM.stageState == 4)
             {
                 tagFlag = true;
-                Dog.GetComponent<moveDog>().Bark(transform.gameObject);
+                Dog.GetComponent<moveDog>().Stare();//狗靜止看人
             }
         }
 
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Dog")
+        if (other.name == "Dog") //碰狗即關
         {
             transform.tag = "Untagged";
+            tagFlag = false;
         }
-        if (other.tag == "Floor" && tagFlag)
+        else if (other.tag == "Floor" && tagFlag)//掉地啟動
         {
             transform.tag = "Target";
-            Dog.GetComponent<moveDog>().StopBark();
+            tagFlag = false;
+            Dog.GetComponent<moveDog>().isStare = false;
         }
     }
 }

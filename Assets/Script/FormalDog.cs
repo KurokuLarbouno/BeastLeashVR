@@ -31,7 +31,7 @@ public class FormalDog : MonoBehaviour
     private int walkAngle = 0, walkMdTm = 1, waitTm = 2;
     public int walkSp = 2;
     //run mode
-    public bool isFallback = false;
+    public bool isStay = false, controllerMode = false;
     public int runSp = 5;
     //stay mode
 
@@ -160,7 +160,11 @@ public class FormalDog : MonoBehaviour
                         //如果狗後退，先切walk
                         outSp = runSp;
                         //Debug.Log("RUN!");
-                        if (ropeVec.magnitude > leashLength + 0.1f) { outSp = 1; dogState = 1; }
+                        if (ropeVec.magnitude > leashLength + 0.1f)
+                        {
+                            if (controllerMode) { outSp = 0; dogState = 1; }
+                            else { outSp = 1; dogState = 1; } 
+                        }
                     }
                     else if (dogState == 3)//3:stay
                     {
@@ -168,13 +172,19 @@ public class FormalDog : MonoBehaviour
                         {
                             dogState = 1;
                         }
-                        if(goVec.magnitude > 0.2f)
+
+                        if (!isStay)
                         {
                             outSp *= (int)(goVec.magnitude / 0.2f);
                             outSp += 2;
                             outSp %= 10;
                             if (outSp > 3) outSp = 3;
                         }
+                        else
+                        {
+                            outSp = 0;
+                        }
+
                     }
 
                     sendMassage = 10 + outSp;

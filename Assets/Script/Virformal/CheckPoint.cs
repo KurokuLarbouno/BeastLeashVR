@@ -50,11 +50,12 @@ public class CheckPoint : MonoBehaviour
                     break;
                 case 2:
                     if (!points[6].GetComponent<Point4>().isArrived) { points[6].gameObject.SetActive(true); checkPoint = 6; }
-                    if (points[6].GetComponent<Point4>().isArrived) {/*points[5].tag = "Untagged";*/points[6].gameObject.SetActive(false); checkPoint = 0; StageTwoEnd(); }
+                    if (points[6].GetComponent<Point4>().isArrived) {/*points[6].tag = "Untagged"; points[6].gameObject.SetActive(false); */checkPoint = 0; StageTwoEnd(); }
                     isAsigned = true;
-                    State = 3;
+                    //State = 3;
                     break;
                 case 3:
+                    points[6].tag = "Untagged"; points[6].gameObject.SetActive(false);
                     break;
                 default:
                     break;

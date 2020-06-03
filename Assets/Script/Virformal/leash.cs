@@ -36,15 +36,13 @@ public class leash : MonoBehaviour
                 float flexpart = (LeashVec.magnitude - leashLimit) / LeashVec.magnitude;
                 transform.position = Vector3.Lerp(curPos, curPos + LeashVec * flexpart, flexpart * 2.0f);
                 Vector3 tmpVec = -LeashVec * 0.07f * flexpart;
-                if (VirtualDog.GetComponent<FormalDog>().dogState != 3)
-                {
-                    Dog.transform.position += new Vector3(tmpVec.x, 0, tmpVec.z);//狗退
-                }
+                Dog.transform.position += new Vector3(tmpVec.x, 0, tmpVec.z);//狗退
                 //震動(0, a*幅度. a*幅度. 0.1sec)
                 //Debug.Log(acc);
                 //抓cardog狀態判定震大震小
                 if (VirtualDog.GetComponent<FormalDog>().dogState == 2) VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 450 * flexpart, 100 * flexpart * 5, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)
                 if (VirtualDog.GetComponent<FormalDog>().dogState != 2) VibrateManerger.GetComponent<VibrationManager>().Pulse(0.1f, 250 * flexpart, 100 * flexpart * 2, SteamVR_Input_Sources.RightHand);//Pulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources sources)                                                                                                                                                               
+                Controller.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
             }
             else
             {
@@ -54,10 +52,11 @@ public class leash : MonoBehaviour
         }
         else
         {
+            Controller.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
             transform.position = curPos;
             Dog.GetComponent<moveDog>().StopPull();
         }
-        transform.rotation = Controller.transform.GetChild(0).rotation;
+        transform.rotation = Controller.transform.rotation;
         oldPos = curPos;  oldSP = curSP; oldLength = LeashVec.magnitude;
     }
 }

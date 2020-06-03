@@ -31,7 +31,7 @@ public class line : MonoBehaviour
 
     }
 
-    void Update()
+    private void LateUpdate()
     {
         //pos = dog.transform.position;
         pos = dog.transform.position;
