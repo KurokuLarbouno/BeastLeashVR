@@ -15,7 +15,7 @@ public class controller : MonoBehaviour
     private Interactable m_CrrentInteractable = null;
     public  List<Interactable> m_CrrentInteractables = new List<Interactable>();
 
-    public GameObject Target;
+    public GameObject Target, Toy;
 
     private void Awake()
     {
@@ -53,11 +53,19 @@ public class controller : MonoBehaviour
         {
             Target.GetComponent<Duck>().quack();
         }
+        if(Toy != null) Toy.transform.parent.GetComponent<Toy>().quack();
         //if (Target != null)
         //{
         //    if (Target.transform.gameObject.tag == "Flag") Target.transform.gameObject.tag = "Untagged";
         //    if (Target.transform.gameObject.tag == "Target") Target.transform.gameObject.tag = "Untagged";
         //}
     }
-    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "toy") { Toy = other.gameObject; Debug.Log(other.transform.parent.name + "toy in"); }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "toy") { Toy = null ; Debug.Log(other.transform.parent.name + "toy out"); }
+    }
 }

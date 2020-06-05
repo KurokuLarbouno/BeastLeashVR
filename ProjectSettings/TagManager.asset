@@ -19,6 +19,7 @@ TagManager:
   - StageManerger
   - PlayerCube
   - Floor
+  - toy
   layers:
   - Default
   - TransparentFX
