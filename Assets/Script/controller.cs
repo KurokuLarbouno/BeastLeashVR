@@ -62,10 +62,10 @@ public class controller : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "toy") { Toy = other.gameObject; Debug.Log(other.transform.parent.name + "toy in"); }
+        if (other.tag == "toy") { Toy = other.gameObject;/* Debug.Log(other.transform.parent.name + "toy in");*/ }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "toy") { Toy = null ; Debug.Log(other.transform.parent.name + "toy out"); }
+        if (other.tag == "toy") { Toy = null ; /*Debug.Log(other.transform.parent.name + "toy out"); */}
     }
 }

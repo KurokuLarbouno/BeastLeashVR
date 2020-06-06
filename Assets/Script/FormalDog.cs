@@ -13,7 +13,7 @@ public class FormalDog : MonoBehaviour
     //Serial
     private SerialPort sp = new SerialPort("COM6", 115200);
     //空間
-    private GameObject Target, Tracker, Rope;
+    public GameObject Target, Tracker, Rope;
     private Vector3 carFace;//最終朝向方向, 車體方向
     private Vector3 carPos, tarPos, ropePos;
     private int carSp = 1;

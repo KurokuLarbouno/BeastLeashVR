@@ -6367,6 +6367,11 @@ PrefabInstance:
       propertyPath: mPlayer
       value: 
       objectReference: {fileID: 997495007}
+    - target: {fileID: 6055231871450390863, guid: a16f60be934ae844e81ef641632a8506,
+        type: 3}
+      propertyPath: carDog
+      value: 
+      objectReference: {fileID: 1190381078}
     - target: {fileID: 6055231872277940539, guid: a16f60be934ae844e81ef641632a8506,
         type: 3}
       propertyPath: m_Layer
@@ -10958,6 +10963,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dogState: 1
+  Target: {fileID: 0}
+  Tracker: {fileID: 0}
+  Rope: {fileID: 0}
   leashLength: 1.7
   walkSp: 3
   isStay: 0

@@ -16,6 +16,7 @@ public class Point4 : MonoBehaviour
     private void OnTriggerEnter(Collider col)
     {
         if (col.transform.tag == "Dog") isArrived = true;
+        //Debug.Log("Dog stay");
     }
     private void OnTriggerExit(Collider col)
     {
